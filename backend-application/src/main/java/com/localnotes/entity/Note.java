@@ -1,4 +1,4 @@
-package com.localnotes.model;
+package com.localnotes.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,9 +1,9 @@
 package com.localnotes.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.localnotes.model.Category;
-import com.localnotes.model.Note;
-import com.localnotes.model.Status;
+import com.localnotes.entity.Category;
+import com.localnotes.entity.Note;
+import com.localnotes.entity.Status;
 import com.localnotes.repository.NoteRepository;
 import java.util.Date;
 import lombok.Data;

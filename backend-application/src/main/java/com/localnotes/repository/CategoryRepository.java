@@ -1,6 +1,6 @@
 package com.localnotes.repository;
 
-import com.localnotes.model.Category;
+import com.localnotes.entity.Category;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

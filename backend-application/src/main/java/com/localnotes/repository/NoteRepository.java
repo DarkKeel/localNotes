@@ -1,6 +1,6 @@
 package com.localnotes.repository;
 
-import com.localnotes.model.Note;
+import com.localnotes.entity.Note;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

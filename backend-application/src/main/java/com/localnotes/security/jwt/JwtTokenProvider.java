@@ -1,6 +1,6 @@
 package com.localnotes.security.jwt;
 
-import com.localnotes.model.Role;
+import com.localnotes.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -30,6 +30,9 @@ public class JwtTokenProvider {
     @Value("${jwt.token.secret}")
     private String secret;
 
+    @Value("${jwt.token.prefix}")
+    private String tokenPrefix;
+
     @Value("${jwt.token.expired}")
     private long validityInMills;
 
@@ -40,13 +43,10 @@ public class JwtTokenProvider {
 
 
     public String createToken(String username, List<Role> roles) {
-
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
-
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMills);
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -66,8 +66,8 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
-            return bearerToken.substring(7, bearerToken.length());
+        if (bearerToken != null && bearerToken.startsWith(tokenPrefix)) {
+            return bearerToken.substring(tokenPrefix.length());
         }
         return null;
     }
@@ -75,12 +75,7 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-
-            if (claims.getBody().getExpiration().before(new Date())) {
-                return false;
-            }
-
-            return true;
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
@@ -91,7 +86,6 @@ public class JwtTokenProvider {
         userRoles.forEach(role -> {
             result.add(role.getName());
         });
-
         return result;
     }
 
