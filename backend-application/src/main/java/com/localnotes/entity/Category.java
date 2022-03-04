@@ -15,4 +15,7 @@ public class Category extends BaseEntity {
 
     @Column(name = "user_id")
     private String userId;
+
+    @Column(name = "description")
+    private String description;
 }
