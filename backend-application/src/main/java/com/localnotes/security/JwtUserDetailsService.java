@@ -1,6 +1,6 @@
 package com.localnotes.security;
 
-import com.localnotes.model.User;
+import com.localnotes.entity.User;
 import com.localnotes.security.jwt.JwtUser;
 import com.localnotes.security.jwt.JwtUserFactory;
 import com.localnotes.service.UserService;
@@ -28,7 +28,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
         JwtUser jwtUser = JwtUserFactory.create(user);
 
-        log.info("IN loadUserByUsername - user with username: {} successfully loaded", username);
+        log.info("JwtUserDetailsService: loadUserByUsername: user with username: {} successfully loaded", username);
 
         return jwtUser;
     }

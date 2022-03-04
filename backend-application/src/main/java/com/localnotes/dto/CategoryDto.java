@@ -1,6 +1,6 @@
 package com.localnotes.dto;
 
-import com.localnotes.model.Category;
+import com.localnotes.entity.Category;
 import com.localnotes.repository.CategoryRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;

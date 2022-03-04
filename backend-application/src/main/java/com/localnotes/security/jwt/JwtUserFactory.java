@@ -1,8 +1,8 @@
 package com.localnotes.security.jwt;
 
-import com.localnotes.model.Role;
-import com.localnotes.model.Status;
-import com.localnotes.model.User;
+import com.localnotes.entity.Role;
+import com.localnotes.entity.Status;
+import com.localnotes.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

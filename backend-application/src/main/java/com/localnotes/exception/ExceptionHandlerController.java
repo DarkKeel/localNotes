@@ -19,7 +19,7 @@ public class ExceptionHandlerController {
         log.error("Wrong data used. Message: {}. [exceptionId = {}]",
                 exception.getMessage(), exceptionId, exception);
         return new ResponseEntity<>(
-                "Illegal argument was used, contact support. ID: " + exceptionId,
+                exception.getMessage() + ",\ncontact support. ID: " + exceptionId,
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -30,7 +30,7 @@ public class ExceptionHandlerController {
                 "Data was not found. Message: {}. [exceptionId = {}]",
                 exception.getMessage(), exceptionId, exception);
         return new ResponseEntity<>(
-                "Data was not found. If this is a mistake, contact support. ID: " + exceptionId,
+                exception.getMessage() + ",\ncontact support. ID: " + exceptionId,
                 HttpStatus.NOT_FOUND);
     }
 
@@ -41,8 +41,7 @@ public class ExceptionHandlerController {
                 "Wrong authentication data. Message: {}. [exceptionId = {}]",
                 exception.getMessage(), exceptionId, exception);
         return new ResponseEntity<>(
-                "Wrong authentication data. Incorrect username/password. "
-                        + "If this is a mistake, contact support. ID: " + exceptionId,
+                exception.getMessage() + ",\ncontact support. ID: " + exceptionId,
                 HttpStatus.BAD_REQUEST);
     }
 }

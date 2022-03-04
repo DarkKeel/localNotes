@@ -3,10 +3,11 @@
 
 ## Description
 
-This application includes separated applications: frontend part (angular) and backend part (spring-boot). \
-Requirements: \
-Java 11, Docker, Angular CLI 13.2.2, Node.js 16.13.1
+This application consists of two parts:
+1. RESTfull service with Java at backend part.
+2. Angular project as frontend part.
 
 
-To launch locally you need: \
-Launch `docker`, go to `dockers` directory in project and run command: `docker compose up` \
+At high level it's supposed to be an application where you can create, store, and manage your notes.\
+Also there is some registration/verification options to separate usage between users.
+User can manage not only notes, but categories for his notes.
