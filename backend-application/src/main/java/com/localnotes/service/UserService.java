@@ -12,12 +12,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -53,10 +51,7 @@ public class UserService {
         user.setStatus(Status.ACTIVE);
         user.setCreated(new Date());
         user.setUpdated(new Date());
-
         User registeredUser = userRepository.save(user);
-
-        log.info("UserService: register: user with id: {} successfully registered", registeredUser.getPublicId());
 
         return registeredUser;
     }
@@ -87,7 +82,6 @@ public class UserService {
                         + "doesn't exists"));
 
         userRepository.deleteById(existsUser.getId());
-        log.info("UserService: delete: user with id: {} successfully deleted", id);
     }
 
     public void changePassword(String id, AuthenticationRequestDto requestDto) {
