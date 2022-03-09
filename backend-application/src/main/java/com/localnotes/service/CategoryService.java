@@ -7,11 +7,9 @@ import com.localnotes.repository.CategoryRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -20,6 +18,12 @@ public class CategoryService {
     public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
+    }
+
+    public Category getCategoryByName(String categoryName, String userId) {
+        Category entity = categoryRepository.findByNameAndUserId(categoryName, userId).orElseThrow(() ->
+                new EntityNotFoundException("Category with name: " + categoryName + " doesn't exists"));
+        return entity;
     }
 
     public List<CategoryDto> getCategories(String userId) {
