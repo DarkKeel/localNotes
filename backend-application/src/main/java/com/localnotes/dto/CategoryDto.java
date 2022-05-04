@@ -11,4 +11,6 @@ public class CategoryDto {
     private String description;
     private String userId;
     private Status status;
+    private int countOfnotes;
+    private String color;
 }
