@@ -5,13 +5,16 @@ import { AppComponent } from './app.component';
 import {RouterModule, Routes} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { LoginpageComponent } from './views/loginpage/loginpage.component';
 
 const routes: Routes = [
+  {path:"login", component:LoginpageComponent}
 ];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginpageComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-export class AuthenticationRequest {
+export class AuthRequest {
   username: string;
   password: string;
 

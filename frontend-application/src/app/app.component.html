@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+<nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark" *ngIf="isLogged">
+  <a class="navbar-brand" routerLink="/">{{title}}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#addnotemodal">Add note</button>
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-envelope-o">
+            <span class="badge badge-primary">{{totalNotesCount}}</span>
+          </i>
+          Категории
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <div *ngFor="let category of categories" (click)="showNotesByCategory(category)" [class.selected-class]="category === selectedCategory">
+            <a class="dropdown-item">{{category.name}} ({{category.countOfnotes}})</a>
+          </div>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="clearSelectedCategory()">Все категории</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="categorySettings()">Настройки</a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav ">
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="fa fa-bell">
+            <span class="badge badge-info">11</span>
+          </i>
+          Test
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="fa fa-globe">
+            <span class="badge badge-success">11</span>
+          </i>
+          Test
+        </a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" routerLink="/logout">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<!-- Modal Add notes -->
+<!--<div class="modal fade" id="addnotemodal" tabindex="-1" role="dialog" aria-labelledby="addnotesmodalTitle" style="display: none;" aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--    <div class="modal-content border-0">-->
+<!--      <div class="modal-header bg-info text-white">-->
+<!--        <h5 class="modal-title text-white">Add Note</h5>-->
+<!--        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">-->
+<!--          <span aria-hidden="true">×</span>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <div class="notes-box">-->
+<!--          <div class="notes-content">-->
+<!--            <form >-->
+<!--              <div class="row">-->
+<!--                <div class="col-md-12 mb-3">-->
+<!--                  <div class="note-title">-->
+<!--                    <label>Note Title</label>-->
+<!--                    <input type="text" id="title" formControlName="title" name="title" class="form-control" minlength="25" placeholder="Title" />-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--                <div class="col-md-12">-->
+<!--                  <div class="note-description">-->
+<!--                    <label>Note Description</label>-->
+<!--                    <textarea id="description" formControlName="description" name="description" class="form-control" minlength="60" placeholder="Description" rows="10"></textarea>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="modal-footer">-->
+<!--                <button id="close-add-form"class="btn btn-danger" data-dismiss="modal">Discard</button>-->
+<!--                <button id="btn-n-add" class="btn btn-info"  type="submit">Add</button>-->
+<!--              </div>-->
+<!--            </form>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+
+
+
+
+<router-outlet></router-outlet>
+
+<div class="beforeFooter">
+  <br>
+</div>
+<footer class="footer position-absolute" *ngIf="isLogged">
+  <div class="container">
+    <br>
+    <p class="text-muted">Project of Makarov Boris.</p>
+  </div>
+</footer>
+</body>

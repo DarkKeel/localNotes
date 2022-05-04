@@ -18,4 +18,10 @@ public class Category extends BaseEntity {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "counts")
+    private int countOfnotes;
+
+    @Column(name = "color")
+    private String color;
 }

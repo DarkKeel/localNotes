@@ -5,6 +5,7 @@ import com.localnotes.entity.Category;
 import com.localnotes.mapper.CategoryMapper;
 import com.localnotes.repository.CategoryRepository;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,12 @@ public class CategoryService {
         if (entityList.size() > 0) {
             List<CategoryDto> result = new ArrayList<>();
             entityList.forEach(category -> result.add(categoryMapper.toCategoryDto(category)));
+            result.sort(new Comparator<CategoryDto>() {
+                @Override
+                public int compare(CategoryDto o1, CategoryDto o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
 
             return result;
         }

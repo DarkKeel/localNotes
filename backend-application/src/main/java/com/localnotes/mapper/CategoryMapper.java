@@ -29,6 +29,8 @@ public class CategoryMapper {
         entity.setUserId(dto.getUserId());
         entity.setStatus(dto.getStatus());
         entity.setUpdated(new Date());
+        entity.setCountOfnotes(dto.getCountOfnotes());
+        entity.setColor(dto.getColor());
 
         return entity;
     }
@@ -40,6 +42,8 @@ public class CategoryMapper {
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
         dto.setStatus(entity.getStatus());
+        dto.setColor(entity.getColor());
+        dto.setCountOfnotes(entity.getCountOfnotes());
 
         return dto;
     }
