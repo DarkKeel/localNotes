@@ -36,10 +36,10 @@ public class NoteController {
     }
 
     @GetMapping("/{userId}/{categoryName}")
-    public List<NoteDto> getAllFavorite(@PathVariable String userId,
+    public List<NoteDto> getAllNotesByCategory(@PathVariable String userId,
                                         @PathVariable String categoryName) {
         Category category = categoryService.getCategoryByName(categoryName, userId);
-        return noteService.getFavoriteNotes(userId, category);
+        return noteService.getNotesByCategory(userId, category);
     }
 
     @PostMapping("/{userId}")

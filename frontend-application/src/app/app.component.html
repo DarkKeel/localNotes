@@ -13,13 +13,13 @@
 
 
 <nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark" *ngIf="isLogged">
-  <a class="navbar-brand" routerLink="/">{{title}}</a>
+  <div class="navbar-brand" routerLink="/" id="clock"></div>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#addnotemodal">Добавить заметку</button>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#addNoteModal">Добавить заметку</button>
     <ul class="navbar-nav mr-auto">
 
 
@@ -39,7 +39,7 @@
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="clearSelectedCategory()">Все категории</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" (click)="categorySettings()">Редактировать...</a>
+          <a class="dropdown-item" type="submit" data-toggle="modal" data-target="#editCategoryModal">Редактировать...</a>
         </div>
       </li>
       <li class="nav-item">
@@ -68,51 +68,124 @@
 </nav>
 <div *ngIf="isLogged">
   <app-notes
-    [category]="selectedCategory"></app-notes>
+    [category]="selectedCategory"
+    [notes]="notes"></app-notes>
 </div>
 
 <!-- Modal Add notes -->
-<!--<div class="modal fade" id="addnotemodal" tabindex="-1" role="dialog" aria-labelledby="addnotesmodalTitle" style="display: none;" aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--    <div class="modal-content border-0">-->
-<!--      <div class="modal-header bg-info text-white">-->
-<!--        <h5 class="modal-title text-white">Add Note</h5>-->
-<!--        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">-->
-<!--          <span aria-hidden="true">×</span>-->
-<!--        </button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
-<!--        <div class="notes-box">-->
-<!--          <div class="notes-content">-->
-<!--            <form >-->
-<!--              <div class="row">-->
-<!--                <div class="col-md-12 mb-3">-->
-<!--                  <div class="note-title">-->
-<!--                    <label>Note Title</label>-->
-<!--                    <input type="text" id="title" formControlName="title" name="title" class="form-control" minlength="25" placeholder="Title" />-->
-<!--                  </div>-->
-<!--                </div>-->
+<!--Edit note-->
+<div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog" aria-labelledby="noteAddModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addNoteModalLabel">Создание заметки</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <div class="form-group">
+            <label for="name">Название заметки:</label>
+            <input type="text" ngModel="Без заголовка" name="name" class="form-control" id="name" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Описание заметки:</label>
+            <textarea rows="7" ngModel="" name="desc" class="form-control" id="description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="category" style="margin-right: 10px;">Категория:</label>
+            <select id="category" ngModel="" name="category" required>
+              <option *ngFor="let v of categories" [value]="v.name">
+                {{v.name}}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="favorite" style="margin-right: 10px;">Добавить в избранное: </label>
+            <input id="favorite" type="checkbox" ngModel="" name="favorite" >
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Отмена</button>
+            <button (click)="onCreateNote(editForm.value)" data-dismiss="modal" class="btn btn-primary"
+                    [disabled]="!editForm.valid">Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!--                <div class="col-md-12">-->
-<!--                  <div class="note-description">-->
-<!--                    <label>Note Description</label>-->
-<!--                    <textarea id="description" formControlName="description" name="description" class="form-control" minlength="60" placeholder="Description" rows="10"></textarea>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="modal-footer">-->
-<!--                <button id="close-add-form"class="btn btn-danger" data-dismiss="modal">Discard</button>-->
-<!--                <button id="btn-n-add" class="btn btn-info"  type="submit">Add</button>-->
-<!--              </div>-->
-<!--            </form>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
 
+<!--Edit category-->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCategoryModalLabel">Редактирование категорий</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm2="ngForm">
+          <div class="form-group">
+            <table border="1px">
+              <th>Название</th>
+              <th>Описание</th>
+              <th>Цвет стикера</th>
+              <th>Количество заметок</th>
+              <th>Удалить</th>
+              <tr *ngFor="let cats of categories">
+                <td>{{cats.name}}</td>
+                <td>{{cats.description}}</td>
+                <td [style.background-color]="cats.color"></td>
+                <td align="center">{{cats.countOfnotes}}</td>
+                <td><button [disabled]="cats.countOfnotes > 0"
+                            (click)="removeCategory(cats)"
+                                           data-dismiss="modal" class="btn btn-danger">Удалить</button></td>
+              </tr>
+            </table>
+          </div>
+          <div class="form-group">
+            <label for="nameCat">Название категории:</label>
+            <input type="text" ngModel="" name="nameCat" class="form-control" id="nameCat" required>
+          </div>
+          <div class="form-group">
+            <label for="descriptionCat">Описание категории:</label>
+            <textarea rows="3" ngModel="" name="descCat" class="form-control" id="descriptionCat"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="cancelCats" data-dismiss="modal" class="btn btn-secondary">Отмена</button>
+            <button (click)="onCreateCategory(editForm2.value)"
+                    [disabled]="!editForm2.valid" data-dismiss="modal" class="btn btn-primary">Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!--Delete category-->
+<div class="modal fade" id="deleteCategoryConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryConfirmModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCategoryConfirmModelLabel">Удаление заметки</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Вы действительно хотите удалить категорию "{{categoryToDelete?.name}}"?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button (click)="onDeleteCategory(categoryToDelete?.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

@@ -4,6 +4,7 @@ import com.localnotes.dto.CategoryDto;
 import com.localnotes.service.CategoryService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +60,6 @@ public class CategoryController {
         log.info("CategoryController: deleteCategory: deleting category id: {}, for user id: {}",
                 categoryId, userId);
         categoryService.deleteCategory(categoryId, userId);
-        return ResponseEntity.ok("Successfully deleted");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

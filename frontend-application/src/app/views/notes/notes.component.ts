@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {Category} from "../../model/Category";
 import {Note} from "../../model/Note";
 import {Router} from "@angular/router";
@@ -17,6 +17,7 @@ export class NotesComponent implements OnInit {
   @Input()
   category: Category;
   categoriesList: Category[];
+  @Input()
   notes: Note[];
   editNote: Note;
   favorite: boolean = false;

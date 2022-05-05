@@ -15,4 +15,14 @@ export class CategoryService {
     const headers = new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
     return this.http.get<Category[]>(environment.API_URL + "/api/v1/category/" + id, {headers});
   }
+
+  createCategory(category: Category) {
+    const headers = new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
+    return this.http.post<Category[]>(environment.API_URL + "/api/v1/category/" + localStorage.getItem("id"), category, {headers});
+  }
+
+  deleteCategory(id: string) {
+    const headers = new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
+    return this.http.delete<Category[]>(environment.API_URL + "/api/v1/category/" + localStorage.getItem("id") + "/" + id, {headers});
+  }
 }

@@ -31,13 +31,13 @@ public class NoteService {
         return result.stream().map(noteMapper::toNoteDto).collect(Collectors.toList());
     }
 
-    public List<NoteDto> getFavoriteNotes(String userId, Category category) {
-        List<Note> result = noteRepository.findAllFavoriteNotes(userId, category).orElse(new ArrayList<>());
+    public List<NoteDto> getNotesByCategory(String userId, Category category) {
+        List<Note> result = noteRepository.findAllByUserIdAndCategory(userId, category).orElse(new ArrayList<>());
         return result.stream().map(noteMapper::toNoteDto).collect(Collectors.toList());
     }
 
     public NoteDto createNote(NoteDto dto, String userId) {
-        if (dto.getId() == null) {
+        if (dto.getId() == null || dto.getId().isEmpty()) {
             return noteMapper.toNoteDto(noteRepository.save(noteMapper.toNoteEntity(dto, userId)));
         }
         throw new IllegalArgumentException("Note with id: " + dto.getId() + " already exists.");
