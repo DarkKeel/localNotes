@@ -6,6 +6,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { LoginpageComponent } from './views/loginpage/loginpage.component';
+import { NotesComponent } from './views/notes/notes.component';
 
 const routes: Routes = [
   {path:"login", component:LoginpageComponent}
@@ -14,7 +15,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    LoginpageComponent
+    LoginpageComponent,
+    NotesComponent
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,7 @@ import com.localnotes.service.CategoryService;
 import com.localnotes.service.NoteService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,6 +65,6 @@ public class NoteController {
                                      @PathVariable String noteId) {
         log.info("NoteController: deleteNote: deleting note id: {} for user id: {}", noteId, userId);
         noteService.deleteNote(noteId, userId);
-        return ResponseEntity.ok("Successfully deleted");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

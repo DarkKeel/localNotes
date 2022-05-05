@@ -1,0 +1,121 @@
+<div class="container" id="main-container">
+  <div >
+    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+      <h4 class="text-white text-center ps-3">{{category.name}}</h4>
+      <h5 class="text-white text-center ps-3">{{category.description}}</h5>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngFor="let note of notes" class="col-md-3 col-xl-4" >
+      <div class="card m-b-30" [style.background-color]="note.category.color">
+        <div class="card-body row" (click)="onOpenModal(note, 'view')">
+          <div class="col-12 card-title align-self-center mb-0">
+            <p class="text-right ps-3">{{(note.created | date: 'dd.MM.yyyy HH:mm')}}</p>
+            <h5 class="text-center ps-3">{{note.name}}</h5>
+            <p class="m-0">{{showDescription(note.description)}}</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="float-right btn-group btn-group-sm">
+            <span class="ps-3" style="margin-right: 10px; margin-top: 5px;">Изменена: {{(note.updated | date: 'dd.MM.yyyy HH:mm')}}</span>
+            <a (click)="onOpenModal(note, 'edit')" class="btn btn-link tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit">
+              <i class="fa fa-pencil"></i> </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--View note-->
+<div class="modal fade" id="viewNoteModal" tabindex="-1" role="dialog" aria-labelledby="noteViewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" [style.background-color]="editNote?.category?.color">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewNoteModalLabel">Просмотр заметки</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-12 card-title align-self-center mb-0">
+          <p class="text-right ps-3">{{(editNote?.created | date: 'dd.MM.yyyy HH:mm')}}</p>
+          <h5 class="text-center ps-3">{{editNote?.name}}</h5>
+          <p class="m-0">{{editNote?.description}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Edit note-->
+<div class="modal fade" id="editNoteModal" tabindex="-1" role="dialog" aria-labelledby="noteEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" [style.background-color]="editNote?.category?.color">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editNoteModalLabel">Редактирование заметки</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-12 card-title align-self-center mb-0">
+          <p class="text-right ps-3">Создана: {{(editNote?.created | date: 'dd.MM.yyyy HH:mm')}}</p>
+        </div>
+        <form #editForm="ngForm">
+          <div class="form-group">
+            <label for="name">Название заметки:</label>
+            <input type="text" ngModel="{{editNote?.name}}" name="name" class="form-control" id="name">
+          </div>
+          <div class="form-group">
+            <label for="description">Описание заметки:</label>
+            <textarea rows="7" ngModel="{{editNote?.description}}" name="desc" class="form-control" id="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="category" style="margin-right: 10px;">Категория:</label>
+            <select id="category" ngModel="{{editNote?.category?.name}}" name="category" >
+              <option *ngFor="let v of categoriesList" [value]="v.name" [selected]="editNote?.category?.name == v.name">
+                {{v.name}}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="favorite" style="margin-right: 10px;">Добавить в избранное: </label>
+            <input id="favorite" type="checkbox" ngModel="{{editNote?.favorite}}" name="favorite" [checked]="editNote?.favorite">
+          </div>
+          <div class="form-group">
+
+          </div>
+
+          <input type="hidden" ngModel="{{editNote?.id}}" name="id" class="form-control" id="id" placeholder="id">
+          <div class="modal-footer">
+            <button (click)="onOpenModal(editNote, 'delete')" data-dismiss="modal" class="btn btn-danger">Удалить</button>
+            <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Закрыть</button>
+            <button (click)="onUpdateNote(editForm.value)" data-dismiss="modal" class="btn btn-primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Delete note-->
+<div class="modal fade" id="deleteNoteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModelLabel">Удаление заметки</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Вы действительно хотите удалить заметку "{{editNote?.name}}"?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button (click)="onDeleteNote(editNote?.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
