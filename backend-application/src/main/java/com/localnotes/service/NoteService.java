@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,6 +55,7 @@ public class NoteService {
         return noteMapper.toNoteDto(noteRepository.save(noteMapper.toNoteEntity(dto, userId)));
     }
 
+    @Transactional
     public void deleteNote(String noteId, String userId) {
         Note entity = noteRepository.findByPublicId(noteId).orElseThrow(() ->
                 new EntityNotFoundException("Note id: " + noteId + " note found."));

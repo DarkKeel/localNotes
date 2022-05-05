@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {AuthRequest} from "../model/AuthRequest";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {AuthResponse} from "../model/AuthResponse";
+import {Category} from "../model/Category";
 
 @Injectable({
   providedIn: 'root'
