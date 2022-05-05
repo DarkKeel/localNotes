@@ -16,5 +16,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     @Query("select n from Note n where n.userId = :userId and n.category = :category and n.isFavorite = true")
     Optional<List<Note>> findAllFavoriteNotes(String userId, Category category);
 
+    Optional<List<Note>> findAllByUserIdAndCategory(String userId, Category category);
+
     void deleteByPublicId(String publicId);
 }
