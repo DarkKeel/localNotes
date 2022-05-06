@@ -12,10 +12,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -36,7 +39,6 @@ public class UserService {
     }
 
     public User register(User user) {
-
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new IllegalArgumentException("User with username: " + user.getUsername() + " already exists");
         } else if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -85,6 +87,7 @@ public class UserService {
     }
 
     public void changePassword(String id, AuthenticationRequestDto requestDto) {
+        log.info("UserService: changePassword: changing password for user with id: {}", id);
         User user = userRepository.findByPublicId(id).orElseThrow(() ->
                 new EntityNotFoundException("UserService: changePassword: there is no user with id: " + id));
         if (!user.getUsername().equals(requestDto.getUsername())) {
@@ -95,6 +98,7 @@ public class UserService {
     }
 
     public UserDto updateUser(String id, UserDto user) {
+        log.info("UserService: changeInfo: updating info about user with id: {}", id);
         User userEntity = userRepository.findByPublicId(id).orElseThrow(() ->
                 new EntityNotFoundException("UserService: changePassword: there is no user with id: " + id));
         if (userRepository.findDuplicateUserByEmail(user.getId(), user.getEmail()).isPresent()) {

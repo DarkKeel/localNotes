@@ -30,7 +30,7 @@ public class NoteMapper {
         entity.setDescription(dto.getDescription());
         entity.setCategory(categoryMapper.toCategoryEntity(dto.getCategory()));
         entity.setStatus(dto.getStatus());
-        entity.setFavorite(dto.isFavorite());
+        entity.setFavorite(dto.getFavorite());
         entity.setUpdated(new Date());
 
         return entity;

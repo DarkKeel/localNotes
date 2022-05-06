@@ -1,6 +1,5 @@
 package com.localnotes.service;
 
-import com.localnotes.dto.CategoryDto;
 import com.localnotes.dto.NoteDto;
 import com.localnotes.entity.Category;
 import com.localnotes.entity.Note;
@@ -12,9 +11,11 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class NoteService {
 
     private static final String WRONG_DATA = "There is bad data in input.";
@@ -38,13 +39,18 @@ public class NoteService {
     }
 
     public NoteDto createNote(NoteDto dto, String userId) {
+        log.info("NoteService: createNote: creating note name: '{}' for user id: {}", dto.getName(), userId);
         if (dto.getId() == null || dto.getId().isEmpty()) {
             return noteMapper.toNoteDto(noteRepository.save(noteMapper.toNoteEntity(dto, userId)));
         }
         throw new IllegalArgumentException("Note with id: " + dto.getId() + " already exists.");
     }
 
-    public NoteDto updateNote(NoteDto dto, String userId) {
+    public NoteDto updateNote(String userId, String noteId, NoteDto dto) {
+        if (!dto.getId().equals(noteId)) {
+            throw new IllegalArgumentException(WRONG_DATA);
+        }
+        log.info("NoteService: updateNote: updating note id: {} for user id: {}", dto.getId(), userId);
         if (dto.getId() == null) {
             throw new IllegalArgumentException(WRONG_DATA);
         }
@@ -58,6 +64,7 @@ public class NoteService {
 
     @Transactional
     public void deleteNote(String noteId, String userId) {
+        log.info("NoteService: deleteNote: deleting note id: {} for user id: {}", noteId, userId);
         Note entity = noteRepository.findByPublicId(noteId).orElseThrow(() ->
                 new EntityNotFoundException("Note id: " + noteId + " note found."));
         if (entity.getUserId().equals(userId)) {

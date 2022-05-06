@@ -45,7 +45,6 @@ public class NoteController {
     @PostMapping("/{userId}")
     public NoteDto createNote(@PathVariable String userId,
                               @RequestBody NoteDto dto) {
-        log.info("NoteController: createNote: creating note name: '{}' for user id: {}", dto.getName(), userId);
         return noteService.createNote(dto, userId);
     }
 
@@ -53,17 +52,12 @@ public class NoteController {
     public NoteDto updateNote(@PathVariable String userId,
                               @PathVariable String noteId,
                               @RequestBody NoteDto dto) {
-        if (!dto.getId().equals(noteId)) {
-            throw new IllegalArgumentException("Wrong data");
-        }
-        log.info("NoteController: updateNote: updating note id: {} for user id: {}", dto.getId(), userId);
-        return noteService.updateNote(dto, userId);
+        return noteService.updateNote(userId, noteId, dto);
     }
 
     @DeleteMapping("/{userId}/{noteId}")
     public ResponseEntity deleteNote(@PathVariable String userId,
                                      @PathVariable String noteId) {
-        log.info("NoteController: deleteNote: deleting note id: {} for user id: {}", noteId, userId);
         noteService.deleteNote(noteId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
