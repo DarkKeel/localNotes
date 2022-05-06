@@ -1,13 +1,17 @@
-# Project "LocalNotes"
+# Проект "LocalNotes"
 
 
-## Description
+## Описание
 
-This application consists of two parts:
-1. RESTfull service with Java at backend part.
-2. Angular project as frontend part.
+Данное приложение состоит из двух частей: \
+1. REST сервер на Spring Boot
+2. UI приложение на Angular
 
+Приложение предназначено для создания/редактирования/удаления заметок, а также для добавления напоминаний.
 
-At high level it's supposed to be an application where you can create, store, and manage your notes.\
-Also there is some registration/verification options to separate usage between users.
-User can manage not only notes, but categories for his notes.
+## Запуск проекта
+
+Для запуска проекта необходимо JDK 17, Docker, Node.js.\
+После запуска докера, необходимо открыть в командной строке каталог `dockers` и выполнить команду `docker compose up`.\
+Как создастся образ базы данных (PostgreSQL), можно запускать серверную часть с `local` профилем.\
+Для запуска UI необходимо открыть в терминале каталог `frontend-application` и выполнить команду `ng serve`.\
