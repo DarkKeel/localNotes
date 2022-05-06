@@ -6,6 +6,7 @@ import {NoteService} from "../../service/note.service";
 import {AppComponent} from "../../app.component";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Status} from "../../model/Status";
+import {CategoryService} from "../../service/category.service";
 
 @Component({
   selector: 'app-notes',
@@ -23,7 +24,7 @@ export class NotesComponent implements OnInit {
   favorite: boolean = false;
 
   constructor(private router: Router, private noteService:NoteService,
-              private app: AppComponent) { }
+              private app: AppComponent, private categoryService:CategoryService) { }
 
   ngOnInit(): void {
     this.updateInfo();
@@ -60,7 +61,10 @@ export class NotesComponent implements OnInit {
     this.editNote.favorite = tmpNote.favorite;
     this.editNote.updated = new Date();
     this.noteService.updateNote(this.editNote).subscribe(data => {
-      this.updateInfo();
+      this.categoryService.updateCategory(data.category).subscribe( data => {
+        this.app.updateInfo(localStorage.getItem("id") || '');
+        this.updateInfo();
+      });
     });
   }
 
@@ -97,7 +101,13 @@ export class NotesComponent implements OnInit {
   onDeleteNote(id: string | undefined) {
     if (id != null) {
       this.noteService.deleteNote(id).subscribe(data => {
-        this.updateInfo();
+        let note = this.notes.find(x => x.id === id);
+        // @ts-ignore
+        let cat = note.category;
+        this.categoryService.updateCategory(cat).subscribe(data => {
+          this.updateInfo()
+          this.app.updateInfo(localStorage.getItem("id") || '');
+        });
       });
     }
   }
