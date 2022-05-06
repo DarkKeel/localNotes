@@ -75,7 +75,14 @@ export class AppComponent implements OnInit{
       this.selectedCategory = category;
       this.noteService.getNotesByCategory(category).subscribe(data => {
         this.notes = data;
-      })
+      }, (error: HttpErrorResponse) => {
+        if (error.status == 403 || error.status == 401) {
+          this.isLogged = false;
+          localStorage.removeItem("id")
+          localStorage.removeItem("token")
+          this.router.navigate(['login']);
+        }
+      });
     } else if (category.name == this.allCategories.name) {
       this.noteService.getNotes().subscribe(data => {
         this.notes = data;
@@ -160,4 +167,52 @@ export class AppComponent implements OnInit{
     })
   }
 
+  onUpdateCategory(value: any) {
+    console.log(value)
+    // @ts-ignore
+    let updateCategory = new Category(value.id, value.nameCat, value.descCat, localStorage.getItem("id"),
+      Status.ACTIVE, value.color, value.count);
+    this.categoryService.updateCategory(updateCategory).subscribe(data => {
+      this.updateInfo(localStorage.getItem("id") || '');
+      this.updateNotesInfo();
+    })
+  }
+
+  categoryToChangeColor: Category;
+
+  changeColor(cats: Category) {
+    this.selectedColor = cats.color != null ? cats.color : '#FFFFF';
+    this.categoryToChangeColor = cats;
+    const container = document.getElementById('main-container');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#changeColorModal');
+    container?.appendChild(button);
+    button.click();
+  }
+  selectedColor: string;
+
+  saveColor() {
+    this.selectedCategoryToDelete.color = this.selectedColor;
+  }
+
+  selectedCategoryToDelete: Category | any;
+
+  selectCategory(category: Category) {
+    this.selectedCategoryToDelete = category;
+  }
+
+
+  clearCategoryToDelete() {
+    this.selectedCategoryToDelete = null;
+  }
+
+  logout() {
+    this.isLogged = false;
+    localStorage.removeItem("id")
+    localStorage.removeItem("token")
+    this.router.navigate(['login']);
+  }
 }
