@@ -15,10 +15,13 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final NoteService noteService;
 
-    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper,
+                           NoteService noteService) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
+        this.noteService = noteService;
     }
 
     public Category getCategoryByName(String categoryName, String userId) {
@@ -65,7 +68,7 @@ public class CategoryService {
         entity.setDescription(dto.getDescription());
         entity.setStatus(dto.getStatus());
         entity.setColor(dto.getColor());
-        entity.setCountOfnotes(dto.getCountOfnotes());
+        entity.setCountOfnotes(noteService.getCountOfNotesByCategory(dto.getUserId(), categoryMapper.toCategoryEntity(dto)));
 
         return categoryMapper.toCategoryDto(categoryRepository.save(entity));
     }

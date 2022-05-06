@@ -18,5 +18,8 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 
     Optional<List<Note>> findAllByUserIdAndCategory(String userId, Category category);
 
+    @Query("select count(n) from Note n where n.userId = :userId and n.category = :category")
+    Integer getCountNotesForCategory (String userId, Category category);
+
     void deleteByPublicId(String publicId);
 }

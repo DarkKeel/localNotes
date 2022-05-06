@@ -64,10 +64,8 @@ export class AppComponent implements OnInit{
   }
 
   private checkToken(): boolean {
-    if (this.token != null && this.publicId != null) {
-      return true;
-    }
-    return false;
+    return this.token != null && this.publicId != null;
+
   }
 
   showNotesByCategory(category: Category) {
@@ -118,7 +116,10 @@ export class AppComponent implements OnInit{
       let newNote = new Note('', newNoteForm.name, newNoteForm.desc, category, newNoteForm.favorite,
         new Date(), new Date(), Status.ACTIVE);
       this.noteService.createNote(newNote).subscribe(data => {
-        this.updateNotesInfo();
+        this.categoryService.updateCategory(data.category).subscribe(data => {
+          this.updateInfo(localStorage.getItem("id") || '');
+          this.updateNotesInfo()
+        });
       })
     }
   }
@@ -168,7 +169,6 @@ export class AppComponent implements OnInit{
   }
 
   onUpdateCategory(value: any) {
-    console.log(value)
     // @ts-ignore
     let updateCategory = new Category(value.id, value.nameCat, value.descCat, localStorage.getItem("id"),
       Status.ACTIVE, value.color, value.count);
