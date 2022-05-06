@@ -9,18 +9,21 @@
       <div id="login-column" class="col-md-6">
         <div id="login-box" class="col-md-12">
           <form id="login-form" class="form" action="" (submit)="loginUser($event)">
-            <h3 class="text-center text-info">Welcome!</h3>
+            <h3 class="text-center text-info">Привет!</h3>
             <div class="form-group">
-              <label for="username" class="text-info">Username:</label><br>
+              <label for="username" class="text-info">Логин:</label><br>
               <input type="text" name="username" id="username" class="form-control">
             </div>
             <div class="form-group">
-              <label for="password" class="text-info">Password:</label><br>
+              <label for="password" class="text-info">Пароль:</label><br>
               <input type="text" name="password" id="password" class="form-control">
             </div>
+
             <div class="form-group" >
-              <br>
-              <input type="submit" id="submitButton" name="submit" class="btn btn-info btn-md" value="submit">
+              <input type="submit" id="submitButton" name="submit" class="btn btn-info btn-md" value="вход">
+            </div>
+            <div class="form-group">
+              <p class="text-info text-center" data-toggle="modal" data-target="#registerModal">Регистрация</p>
             </div>
           </form>
         </div>
@@ -32,6 +35,53 @@
             </div>
           </form>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerModalLabel">Регистрация нового пользователя</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <div class="form-group">
+            <label for="regUsername">Логин:</label>
+            <input type="text" ngModel="" name="regUsername" class="form-control" id="regUsername" required>
+          </div>
+          <div class="form-group">
+            <label for="regFirstname">Имя:</label>
+            <input type="text" ngModel="" name="regFirstname" class="form-control" id="regFirstname" required>
+          </div>
+          <div class="form-group">
+            <label for="regLastname">Фамилия:</label>
+            <input type="text" ngModel="" name="regLastname" class="form-control" id="regLastname" required>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email:</label>
+            <input type="text" ngModel="" name="regEmail" class="form-control" id="regEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Пароль:</label>
+            <input type="text" ngModel="" name="regPassword" class="form-control" id="regPassword" required>
+          </div>
+          <div class="form-group">
+            <label for="regPasswordCopy">Пароль(повторно):</label>
+            <input type="text" ngModel="" name="regPasswordCopy" class="form-control" id="regPasswordCopy" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Отмена</button>
+            <button data-dismiss="modal" class="btn btn-primary"
+                    (click)="registerNewUser(editForm.value)"
+                    [disabled]="!editForm.valid || editForm.value.regPassword != editForm.value.regPasswordCopy">Зарегистрироваться</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

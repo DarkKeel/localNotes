@@ -19,7 +19,7 @@ export class AppComponent implements OnInit{
   publicId = localStorage.getItem("id");
   token = localStorage.getItem("token");
   isLogged;
-  categories: Category[];
+  categories: Category[] = [];
   notes: Note[];
   categoryToDelete: Category;
   totalNotesCount: number;
