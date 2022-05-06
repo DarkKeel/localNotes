@@ -128,12 +128,12 @@
       </div>
       <div class="modal-body">
         <form #editForm2="ngForm">
-          <div class="form-group">
+          <div *ngIf="categories.length > 0" class="form-group">
             <table border="1px">
               <th>Название</th>
               <th>Цвет стикера</th>
               <th>Количество заметок</th>
-              <tr *ngFor="let cats of categories" (click)="selectCategory(cats)" [style.background-color]="selectedCategoryToDelete === cats ? 'gray' : 'white'">
+              <tr *ngFor="let cats of categories" (click)="selectCategory(cats)" [style.background-color]="selectedCategoryToDelete === cats ? '#cdeeef' : 'white'">
                 <td>{{cats.name}}</td>
                 <td [style.background-color]="cats.color" (click)="changeColor(cats)"></td>
                 <td align="center">{{cats.countOfnotes}}</td>

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import {AuthenticateService} from "../../service/authenticate.service";
 import {AuthRequest} from "../../model/AuthRequest";
 import {AppComponent} from "../../app.component";
-
+import {UserReg} from "../../model/UserReg";
 
 @Component({
   selector: 'app-login',
@@ -44,4 +44,27 @@ export class LoginpageComponent implements OnInit {
     });
   }
 
+  registerNewUser(value: any) {
+    let newUser: UserReg = new UserReg(value.regUsername, value.regFirstname,
+      value.regLastname, value.regEmail, value.regPassword);
+    this.auth.createUser(newUser).subscribe(data => {
+      let username = data.username;
+      let password = newUser.password;
+      this.auth.getToken(new AuthRequest(username, password)).subscribe(data => {
+        localStorage.setItem("id", data.id);
+        localStorage.setItem("token", data.token);
+        this.app.setIsLogged(true);
+        this.app.updateInfo(data.id);
+        this.router.navigate(['']);
+      }, (error: HttpErrorResponse) => {
+        this.errorMessage = error.status;
+        if (error.status == 401 || error.status == 403) {
+          this.errorMessage = 'Incorrect login and/or password'
+        } else {
+          this.errorMessage = 'Something went wrong.'
+        }
+        this.isError = true;
+      });
+    })
+  }
 }
