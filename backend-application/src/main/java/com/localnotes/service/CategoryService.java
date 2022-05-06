@@ -10,10 +10,14 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
 import com.localnotes.repository.NoteRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class CategoryService {
+
+    private static final String WRONG_DATA = "Wrong data in request";
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
@@ -37,12 +41,7 @@ public class CategoryService {
         if (entityList.size() > 0) {
             List<CategoryDto> result = new ArrayList<>();
             entityList.forEach(category -> result.add(categoryMapper.toCategoryDto(category)));
-            result.sort(new Comparator<CategoryDto>() {
-                @Override
-                public int compare(CategoryDto o1, CategoryDto o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
+            result.sort(Comparator.comparing(CategoryDto::getName));
 
             return result;
         }
@@ -50,7 +49,11 @@ public class CategoryService {
         return new ArrayList<>();
     }
 
-    public CategoryDto createCategory(CategoryDto dto) {
+    public CategoryDto createCategory(String userId, CategoryDto dto) {
+        if (!userId.equals(dto.getUserId())) {
+            throw new IllegalArgumentException(WRONG_DATA);
+        }
+        log.info("CategoryService: createCategory: creating category for user id: {}", userId);
         if (categoryRepository.findByNameAndUserId(dto.getName(), dto.getUserId()).isPresent()) {
             throw new IllegalArgumentException("Category with name: " + dto.getName() + " already exists");
         }
@@ -59,7 +62,12 @@ public class CategoryService {
         return categoryMapper.toCategoryDto(categoryRepository.save(entity));
     }
 
-    public CategoryDto updateCategory(CategoryDto dto) {
+    public CategoryDto updateCategory(String userId, String categoryId, CategoryDto dto) {
+        if (!userId.equals(dto.getUserId()) || !categoryId.equals(dto.getId())) {
+            throw new IllegalArgumentException(WRONG_DATA);
+        }
+        log.info("CategoryService: updateCategory: updating category id: {}, for user id: {}",
+                categoryId, userId);
         Category entity = categoryRepository.findByNameAndUserId(dto.getName(), dto.getUserId())
                 .orElseThrow(() ->
                         new EntityNotFoundException("Category with name: " + dto.getName() + " doesn't exists"));
@@ -70,14 +78,17 @@ public class CategoryService {
         entity.setDescription(dto.getDescription());
         entity.setStatus(dto.getStatus());
         entity.setColor(dto.getColor());
-        entity.setCountOfnotes(noteRepository.getCountNotesForCategory(dto.getUserId(), categoryMapper.toCategoryEntity(dto)));
+        entity.setCountOfnotes(
+                noteRepository.getCountNotesForCategory(dto.getUserId(), categoryMapper.toCategoryEntity(dto)));
 
         return categoryMapper.toCategoryDto(categoryRepository.save(entity));
     }
 
-    public void deleteCategory(String id, String userId) {
-        Category category = categoryRepository.findByPublicIdAndAndUserId(id, userId).orElseThrow(() ->
-                new EntityNotFoundException("Category with id: " + id + " doesn't exsist"));
+    public void deleteCategory(String categoryId, String userId) {
+        log.info("CategoryService: deleteCategory: deleting category id: {}, for user id: {}",
+                categoryId, userId);
+        Category category = categoryRepository.findByPublicIdAndAndUserId(categoryId, userId).orElseThrow(() ->
+                new EntityNotFoundException("Category with id: " + categoryId + " doesn't exsist"));
         categoryRepository.delete(category);
     }
 }

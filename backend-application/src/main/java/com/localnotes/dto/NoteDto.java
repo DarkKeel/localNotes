@@ -1,7 +1,6 @@
 package com.localnotes.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.localnotes.entity.Category;
 import com.localnotes.entity.Status;
 import java.util.Date;
 import lombok.Data;
@@ -14,7 +13,7 @@ public class NoteDto {
     private String name;
     private String description;
     private CategoryDto category;
-    private boolean favorite;
+    private Boolean favorite;
     private Date created;
     private Date updated;
     private Status status;
