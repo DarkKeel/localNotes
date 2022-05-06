@@ -19,13 +19,10 @@ public class NoteService {
 
     private static final String WRONG_DATA = "There is bad data in input.";
 
-    private final CategoryService categoryService;
     private final NoteRepository noteRepository;
     private final NoteMapper noteMapper;
 
-    public NoteService(CategoryService categoryService, NoteRepository noteRepository,
-                       NoteMapper noteMapper) {
-        this.categoryService = categoryService;
+    public NoteService(NoteRepository noteRepository, NoteMapper noteMapper) {
         this.noteRepository = noteRepository;
         this.noteMapper = noteMapper;
     }
@@ -68,9 +65,5 @@ public class NoteService {
         } else {
             throw new IllegalArgumentException(WRONG_DATA);
         }
-    }
-
-    public int getCountOfNotesByCategory(String userId, Category category) {
-        return noteRepository.getCountNotesForCategory(userId, category);
     }
 }

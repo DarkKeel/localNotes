@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
+
+import com.localnotes.repository.NoteRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,13 +17,13 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private final NoteService noteService;
+    private final NoteRepository noteRepository;
 
     public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper,
-                           NoteService noteService) {
+                           NoteRepository noteRepository) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
-        this.noteService = noteService;
+        this.noteRepository = noteRepository;
     }
 
     public Category getCategoryByName(String categoryName, String userId) {
@@ -68,7 +70,7 @@ public class CategoryService {
         entity.setDescription(dto.getDescription());
         entity.setStatus(dto.getStatus());
         entity.setColor(dto.getColor());
-        entity.setCountOfnotes(noteService.getCountOfNotesByCategory(dto.getUserId(), categoryMapper.toCategoryEntity(dto)));
+        entity.setCountOfnotes(noteRepository.getCountNotesForCategory(dto.getUserId(), categoryMapper.toCategoryEntity(dto)));
 
         return categoryMapper.toCategoryDto(categoryRepository.save(entity));
     }

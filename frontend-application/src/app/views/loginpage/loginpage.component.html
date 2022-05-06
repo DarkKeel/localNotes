@@ -76,7 +76,7 @@
             <input type="password" ngModel="" name="regPasswordCopy" class="form-control" id="regPasswordCopy" required>
           </div>
           <div class="modal-footer">
-            <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Отмена</button>
+            <button type="button" data-dismiss="modal" class="btn btn-secondary">Отмена</button>
             <button data-dismiss="modal" class="btn btn-primary"
                     (click)="registerNewUser(editForm.value)"
                     [disabled]="!editForm.valid || editForm.value.regPassword != editForm.value.regPasswordCopy">Зарегистрироваться</button>
