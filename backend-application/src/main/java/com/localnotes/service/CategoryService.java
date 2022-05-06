@@ -64,6 +64,8 @@ public class CategoryService {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setStatus(dto.getStatus());
+        entity.setColor(dto.getColor());
+        entity.setCountOfnotes(dto.getCountOfnotes());
 
         return categoryMapper.toCategoryDto(categoryRepository.save(entity));
     }

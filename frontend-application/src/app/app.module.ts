@@ -7,6 +7,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { LoginpageComponent } from './views/loginpage/loginpage.component';
 import { NotesComponent } from './views/notes/notes.component';
+import {ColorPickerModule} from "ngx-color-picker";
 
 const routes: Routes = [
   {path:"login", component:LoginpageComponent}
@@ -23,7 +24,8 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    ColorPickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

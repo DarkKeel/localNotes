@@ -42,27 +42,27 @@
           <a class="dropdown-item" type="submit" data-toggle="modal" data-target="#editCategoryModal">Редактировать...</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-          <i class="fa fa-bell">
-            <span class="badge badge-info">11</span>
-          </i>
-          Test
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-          <i class="fa fa-globe">
-            <span class="badge badge-success">11</span>
-          </i>
-          Test
-        </a>
-      </li>
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="#">-->
+<!--          <i class="fa fa-bell">-->
+<!--            <span class="badge badge-info">11</span>-->
+<!--          </i>-->
+<!--          Test-->
+<!--        </a>-->
+<!--      </li>-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="#">-->
+<!--          <i class="fa fa-globe">-->
+<!--            <span class="badge badge-success">11</span>-->
+<!--          </i>-->
+<!--          Test-->
+<!--        </a>-->
+<!--      </li>-->
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" routerLink="/logout">Logout</button>
+      <button class="btn btn-outline-warning my-2 my-sm-0" type="submit" (click)="logout()">Logout</button>
     </form>
   </div>
 </nav>
@@ -73,7 +73,6 @@
 </div>
 
 <!-- Modal Add notes -->
-<!--Edit note-->
 <div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog" aria-labelledby="noteAddModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -132,33 +131,39 @@
           <div class="form-group">
             <table border="1px">
               <th>Название</th>
-              <th>Описание</th>
               <th>Цвет стикера</th>
               <th>Количество заметок</th>
-              <th>Удалить</th>
-              <tr *ngFor="let cats of categories">
+              <tr *ngFor="let cats of categories" (click)="selectCategory(cats)" [style.background-color]="selectedCategoryToDelete === cats ? 'gray' : 'white'">
                 <td>{{cats.name}}</td>
-                <td>{{cats.description}}</td>
-                <td [style.background-color]="cats.color"></td>
+                <td [style.background-color]="cats.color" (click)="changeColor(cats)"></td>
                 <td align="center">{{cats.countOfnotes}}</td>
-                <td><button [disabled]="cats.countOfnotes > 0"
-                            (click)="removeCategory(cats)"
-                                           data-dismiss="modal" class="btn btn-danger">Удалить</button></td>
               </tr>
             </table>
           </div>
           <div class="form-group">
             <label for="nameCat">Название категории:</label>
-            <input type="text" ngModel="" name="nameCat" class="form-control" id="nameCat" required>
+            <input type="text" ngModel="{{selectedCategoryToDelete?.name}}" name="nameCat" class="form-control" id="nameCat" required>
           </div>
           <div class="form-group">
             <label for="descriptionCat">Описание категории:</label>
-            <textarea rows="3" ngModel="" name="descCat" class="form-control" id="descriptionCat"></textarea>
+            <textarea rows="3" ngModel="{{selectedCategoryToDelete?.description}}" name="descCat" class="form-control" id="descriptionCat"></textarea>
           </div>
+          <input type="hidden" ngModel="{{selectedCategoryToDelete?.id}}" name="id" class="form-control" id="id">
+          <input type="hidden" ngModel="{{selectedCategoryToDelete?.color}}" name="color" class="form-control" id="color">
+          <input type="hidden" ngModel="{{selectedCategoryToDelete?.countOfnotes}}" name="count" class="form-control" id="count">
           <div class="modal-footer">
+            <button *ngIf="selectedCategoryToDelete != null && categories.indexOf(selectedCategoryToDelete) != -1"
+                    (click)="clearCategoryToDelete()" type="button" id="clearFields" data-dismiss="modal" class="btn btn-secondary">Снять выделение</button>
+            <button [disabled]="selectedCategoryToDelete != null ? selectedCategoryToDelete.countOfnotes > 0 : true"
+                        (click)="removeCategory(selectedCategoryToDelete)"
+                        data-dismiss="modal" class="btn btn-danger">Удалить</button>
             <button type="button" id="cancelCats" data-dismiss="modal" class="btn btn-secondary">Отмена</button>
-            <button (click)="onCreateCategory(editForm2.value)"
+            <button *ngIf="selectedCategoryToDelete == null || categories.indexOf(selectedCategoryToDelete) == -1"
+                    (click)="onCreateCategory(editForm2.value)"
                     [disabled]="!editForm2.valid" data-dismiss="modal" class="btn btn-primary">Создать</button>
+            <button *ngIf="selectedCategoryToDelete != null && categories.indexOf(selectedCategoryToDelete) != -1"
+                    (click)="onUpdateCategory(editForm2.value)"
+                    [disabled]="!editForm2.valid" data-dismiss="modal" class="btn btn-primary">Обновить</button>
           </div>
         </form>
       </div>
@@ -179,15 +184,38 @@
       <div class="modal-body">
         <p>Вы действительно хотите удалить категорию "{{categoryToDelete?.name}}"?</p>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-          <button (click)="onDeleteCategory(categoryToDelete?.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+          <button (click)="onDeleteCategory(categoryToDelete?.id)" class="btn btn-danger" data-dismiss="modal">Да</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-
+<!--Change color-->
+<div class="modal fade" id="changeColorModal" tabindex="-1" role="dialog" aria-labelledby="changeColorModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changeColorModelLabel">Изменение цвета</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body align-self-center">
+        <div class="colorPaletteContainer">
+          <span [style.background]="selectedColor" [cpToggle]="true" [cpDialogDisplay]="'inline'"
+                [(colorPicker)]="selectedColor"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <button (click)="saveColor()"
+                data-dismiss="modal" class="btn btn-primary">Изменить цвет</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <router-outlet></router-outlet>
