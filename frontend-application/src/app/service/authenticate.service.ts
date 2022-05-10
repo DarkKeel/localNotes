@@ -18,6 +18,6 @@ export class AuthenticateService {
   }
 
   createUser(user: UserReg) {
-    return this.http.post<User>(environment.API_URL + "/api/v1/auth/create", user)
+    return this.http.post<void>(environment.API_URL + "/api/v1/auth/create", user)
   }
 }

@@ -17,11 +17,11 @@ export class NotesComponent implements OnInit {
 
   @Input()
   category: Category;
+  @Input()
   categoriesList: Category[];
   @Input()
   notes: Note[];
   editNote: Note;
-  favorite: boolean = false;
 
   constructor(private router: Router, private noteService:NoteService,
               private app: AppComponent, private categoryService:CategoryService) { }
@@ -42,29 +42,34 @@ export class NotesComponent implements OnInit {
   private updateInfo() {
     this.noteService.getNotes().subscribe(data => {
       this.notes = data;
-      this.categoriesList = this.app.categories;
     }, (error: HttpErrorResponse) => {
       if (error.status == 403 || error.status == 401) {
-        this.app.isLogged = false;
-        localStorage.removeItem("id")
-        localStorage.removeItem("token")
-        this.router.navigate(['login']);
+        this.app.logout();
       }
     });
   }
 
-  onUpdateNote(tmpNote: any) {
+  updateSelectedNote(tmpNote: any) {
     this.editNote.name = tmpNote.name;
     this.editNote.description = tmpNote.desc;
     let category1 = this.categoriesList.find(x => x.name === tmpNote.category);
-    this.editNote.category = category1 != null ? category1 : this.categoriesList[0];
+    // @ts-ignore
+    this.editNote.category = category1;
     this.editNote.favorite = tmpNote.favorite;
     this.editNote.updated = new Date();
-    this.noteService.updateNote(this.editNote).subscribe(data => {
-      this.categoryService.updateCategory(data.category).subscribe( data => {
-        this.app.updateInfo(localStorage.getItem("id") || '');
+    this.noteService.updateNote(this.editNote).subscribe(() => {
+      this.categoryService.updateCategory(this.editNote.category).subscribe( () => {
+        this.app.updateInfo();
         this.updateInfo();
+      }, (error: HttpErrorResponse) => {
+        if (error.status == 403 || error.status == 401) {
+          this.app.logout();
+        }
       });
+    }, (error: HttpErrorResponse) => {
+      if (error.status == 403 || error.status == 401) {
+        this.app.logout();
+      }
     });
   }
 
@@ -90,24 +95,24 @@ export class NotesComponent implements OnInit {
     button.click();
   }
 
-  checkStatus(editNote: Note): boolean {
-    if (editNote != null) {
-      return editNote.status !== Status.ACTIVE;
-    } else {
-      return false;
-    }
-  }
-
   onDeleteNote(id: string | undefined) {
     if (id != null) {
-      this.noteService.deleteNote(id).subscribe(data => {
+      this.noteService.deleteNote(id).subscribe(() => {
         let note = this.notes.find(x => x.id === id);
         // @ts-ignore
         let cat = note.category;
-        this.categoryService.updateCategory(cat).subscribe(data => {
+        this.categoryService.updateCategory(cat).subscribe(() => {
           this.updateInfo()
-          this.app.updateInfo(localStorage.getItem("id") || '');
+          this.app.updateInfo();
+        }, (error: HttpErrorResponse) => {
+          if (error.status == 403 || error.status == 401) {
+            this.app.logout();
+          }
         });
+      }, (error: HttpErrorResponse) => {
+        if (error.status == 403 || error.status == 401) {
+          this.app.logout();
+        }
       });
     }
   }

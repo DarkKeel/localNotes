@@ -10,7 +10,7 @@
       <div class="card m-b-30" [style.background-color]="note.category.color">
         <div class="card-body row" (click)="onOpenModal(note, 'view')">
           <div class="col-12 card-title align-self-center mb-0">
-            <p class="text-right ps-3">{{(note.created | date: 'dd.MM.yyyy HH:mm')}}</p>
+            <p class="text-right ps-3">{{(note.created | date: 'dd.MM.yyyy HH:mm')}} <i *ngIf="note.favorite" class="fa fa-star" aria-hidden="true"></i></p>
             <h5 class="text-center ps-3">{{note.name}}</h5>
             <p class="m-0">{{showDescription(note.description)}}</p>
           </div>
@@ -91,7 +91,7 @@
           <div class="modal-footer">
             <button (click)="onOpenModal(editNote, 'delete')" data-dismiss="modal" class="btn btn-danger">Удалить</button>
             <button type="button" data-dismiss="modal" class="btn btn-secondary">Закрыть</button>
-            <button (click)="onUpdateNote(editForm.value)" data-dismiss="modal" class="btn btn-primary">Сохранить</button>
+            <button (click)="updateSelectedNote(editForm.value)" data-dismiss="modal" class="btn btn-primary">Сохранить</button>
           </div>
         </form>
       </div>

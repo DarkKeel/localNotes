@@ -28,36 +28,20 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-envelope-o">
-            <span class="badge badge-primary">{{totalNotesCount}}</span>
+            <span *ngIf="categories.length > 0" class="badge badge-primary">{{totalNotesCount}}</span>
           </i>
           Категории
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <div *ngFor="let category of categories" (click)="showNotesByCategory(category)" [class.selected-class]="category === selectedCategory">
-            <a class="dropdown-item">{{category.name}} ({{category.countOfnotes}})</a>
+          <div *ngFor="let category of categories" (click)="showNotesByCategory(category)" [class.selected-class]="category === selectedCategoryToView">
+            <a class="dropdown-item">{{category.name}} ({{category.countOfNotes}})</a>
           </div>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" (click)="clearSelectedCategory()">Все категории</a>
+          <a class="dropdown-item" (click)="showNotesByCategory(allCategories)">Все категории</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" type="submit" data-toggle="modal" data-target="#editCategoryModal">Редактировать...</a>
         </div>
       </li>
-<!--      <li class="nav-item">-->
-<!--        <a class="nav-link" href="#">-->
-<!--          <i class="fa fa-bell">-->
-<!--            <span class="badge badge-info">11</span>-->
-<!--          </i>-->
-<!--          Test-->
-<!--        </a>-->
-<!--      </li>-->
-<!--      <li class="nav-item">-->
-<!--        <a class="nav-link" href="#">-->
-<!--          <i class="fa fa-globe">-->
-<!--            <span class="badge badge-success">11</span>-->
-<!--          </i>-->
-<!--          Test-->
-<!--        </a>-->
-<!--      </li>-->
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="text" placeholder="Поиск" aria-label="Search" disabled>
@@ -68,8 +52,9 @@
 </nav>
 <div *ngIf="isLogged">
   <app-notes
-    [category]="selectedCategory"
-    [notes]="notes"></app-notes>
+    [category]="selectedCategoryToView"
+    [notes]="notes"
+    [categoriesList]="categories"></app-notes>
 </div>
 
 <!-- Modal Add notes -->
@@ -133,35 +118,35 @@
               <th>Название</th>
               <th>Цвет стикера</th>
               <th>Количество заметок</th>
-              <tr *ngFor="let cats of categories" (click)="selectCategory(cats)" [style.background-color]="selectedCategoryToDelete === cats ? '#cdeeef' : 'white'">
+              <tr *ngFor="let cats of categories" (click)="selectCategory(cats)" [style.background-color]="selectedCategoryToEdit === cats ? '#cdeeef' : 'white'">
                 <td>{{cats.name}}</td>
                 <td [style.background-color]="cats.color" (click)="changeColor(cats)"></td>
-                <td align="center">{{cats.countOfnotes}}</td>
+                <td align="center">{{cats.countOfNotes}}</td>
               </tr>
             </table>
           </div>
           <div class="form-group">
             <label for="nameCat">Название категории:</label>
-            <input type="text" ngModel="{{selectedCategoryToDelete?.name}}" name="nameCat" class="form-control" id="nameCat" required>
+            <input type="text" ngModel="{{selectedCategoryToEdit?.name}}" name="nameCat" class="form-control" id="nameCat" required>
           </div>
           <div class="form-group">
             <label for="descriptionCat">Описание категории:</label>
-            <textarea rows="3" ngModel="{{selectedCategoryToDelete?.description}}" name="descCat" class="form-control" id="descriptionCat"></textarea>
+            <textarea rows="3" ngModel="{{selectedCategoryToEdit?.description}}" name="descCat" class="form-control" id="descriptionCat"></textarea>
           </div>
-          <input type="hidden" ngModel="{{selectedCategoryToDelete?.id}}" name="id" class="form-control" id="id">
-          <input type="hidden" ngModel="{{selectedCategoryToDelete?.color}}" name="color" class="form-control" id="color">
-          <input type="hidden" ngModel="{{selectedCategoryToDelete?.countOfnotes}}" name="count" class="form-control" id="count">
+          <input type="hidden" ngModel="{{selectedCategoryToEdit?.id}}" name="id" class="form-control" id="id">
+          <input type="hidden" ngModel="{{selectedCategoryToEdit?.color}}" name="color" class="form-control" id="color">
+          <input type="hidden" ngModel="{{selectedCategoryToEdit?.countOfNotes}}" name="count" class="form-control" id="count">
           <div class="modal-footer">
-            <button *ngIf="selectedCategoryToDelete != null && categories.indexOf(selectedCategoryToDelete) != -1"
+            <button *ngIf="selectedCategoryToEdit != null && categories.indexOf(selectedCategoryToEdit) != -1"
                     (click)="clearCategoryToDelete()" type="button" id="clearFields" data-dismiss="modal" class="btn btn-secondary">Снять выделение</button>
-            <button [disabled]="selectedCategoryToDelete != null ? selectedCategoryToDelete.countOfnotes > 0 : true"
-                        (click)="removeCategory(selectedCategoryToDelete)"
+            <button [disabled]="selectedCategoryToEdit != null ? selectedCategoryToEdit.countOfNotes > 0 : true"
+                        (click)="removeCategory()"
                         data-dismiss="modal" class="btn btn-danger">Удалить</button>
             <button type="button" id="cancelCats" data-dismiss="modal" class="btn btn-secondary">Отмена</button>
-            <button *ngIf="selectedCategoryToDelete == null || categories.indexOf(selectedCategoryToDelete) == -1"
+            <button *ngIf="selectedCategoryToEdit == null || categories.indexOf(selectedCategoryToEdit) == -1"
                     (click)="onCreateCategory(editForm2.value)"
                     [disabled]="!editForm2.valid" data-dismiss="modal" class="btn btn-primary">Создать</button>
-            <button *ngIf="selectedCategoryToDelete != null && categories.indexOf(selectedCategoryToDelete) != -1"
+            <button *ngIf="selectedCategoryToEdit != null && categories.indexOf(selectedCategoryToEdit) != -1"
                     (click)="onUpdateCategory(editForm2.value)"
                     [disabled]="!editForm2.valid" data-dismiss="modal" class="btn btn-primary">Обновить</button>
           </div>
@@ -182,10 +167,10 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>Вы действительно хотите удалить категорию "{{categoryToDelete?.name}}"?</p>
+        <p>Вы действительно хотите удалить категорию "{{selectedCategoryToEdit?.name}}"?</p>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
-          <button (click)="onDeleteCategory(categoryToDelete?.id)" class="btn btn-danger" data-dismiss="modal">Да</button>
+          <button (click)="onDeleteCategory(selectedCategoryToEdit?.id)" class="btn btn-danger" data-dismiss="modal">Да</button>
         </div>
       </div>
     </div>

@@ -4,9 +4,10 @@ import {Category} from "./model/Category";
 import {CategoryService} from "./service/category.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Status} from "./model/Status";
-import {User} from "./model/User";
 import {Note} from "./model/Note";
 import {NoteService} from "./service/note.service";
+import {CreateCategoryRequest} from "./model/CreateCategoryRequest";
+import {CreateNoteRequest} from "./model/CreateNoteRequest";
 
 @Component({
   selector: 'app-root',
@@ -15,15 +16,15 @@ import {NoteService} from "./service/note.service";
 })
 export class AppComponent implements OnInit{
   title = 'Local Notes';
-  user: User;
   publicId = localStorage.getItem("id");
   token = localStorage.getItem("token");
   isLogged;
-  categories: Category[] = [];
   notes: Note[];
-  categoryToDelete: Category;
+  categories: Category[] = [];
+  selectedCategoryToView: Category;
+  selectedCategoryToEdit: Category;
+  selectedColor: string;
   totalNotesCount: number;
-  selectedCategory: Category;
   allCategories = new Category('-1', 'Все заметки', 'Список всех заметок',
     '',Status.ACTIVE, '', 0);
 
@@ -37,8 +38,8 @@ export class AppComponent implements OnInit{
     if (!this.isLogged) {
       this.router.navigate(['login']);
     } else {
-      this.selectedCategory = this.allCategories;
-      this.updateInfo(this.publicId != null ? this.publicId : "");
+      this.selectedCategoryToView = this.allCategories;
+      this.updateInfo();
     }
   }
 
@@ -47,55 +48,41 @@ export class AppComponent implements OnInit{
     this.isLogged = value;
   }
 
-  updateInfo(id: string) {
-    this.categoryService.getCategories(id).subscribe(data => {
+  updateInfo() {
+    this.categoryService.getCategories().subscribe(data => {
       this.categories = data;
       this.totalNotesCount = 0;
-      data.forEach(x => this.totalNotesCount += x.countOfnotes);
-      this.allCategories.countOfnotes = this.totalNotesCount;
+      data.forEach(x => this.totalNotesCount += x.countOfNotes);
+      this.allCategories.countOfNotes = this.totalNotesCount;
     }, (error: HttpErrorResponse) => {
       if (error.status == 403 || error.status == 401) {
-        this.isLogged = false;
-        localStorage.removeItem("id")
-        localStorage.removeItem("token")
-        this.router.navigate(['login']);
+        this.logout();
       }
     });
   }
 
   private checkToken(): boolean {
     return this.token != null && this.publicId != null;
-
   }
 
   showNotesByCategory(category: Category) {
-    if (category != this.selectedCategory && category != this.allCategories) {
-      this.selectedCategory = category;
+    if (category != this.selectedCategoryToView && category != this.allCategories) {
+      this.selectedCategoryToView = category;
       this.noteService.getNotesByCategory(category).subscribe(data => {
         this.notes = data;
       }, (error: HttpErrorResponse) => {
         if (error.status == 403 || error.status == 401) {
-          this.isLogged = false;
-          localStorage.removeItem("id")
-          localStorage.removeItem("token")
-          this.router.navigate(['login']);
+          this.logout();
         }
       });
-    } else if (category.name == this.allCategories.name) {
+    } else if (category === this.allCategories) {
+      this.selectedCategoryToView = this.allCategories;
       this.noteService.getNotes().subscribe(data => {
         this.notes = data;
       })
     }
   }
 
-  clearSelectedCategory() {
-    this.selectedCategory = this.allCategories;
-    this.showNotesByCategory(this.selectedCategory);
-  }
-
-  categorySettings() {
-
-  }
   runClock() {
     window.setInterval(function(){
       let now = new Date();
@@ -112,16 +99,15 @@ export class AppComponent implements OnInit{
     if (newNoteForm.favorite === '') {
       newNoteForm.favorite = false;
     }
-    if (category != null) {
-      let newNote = new Note('', newNoteForm.name, newNoteForm.desc, category, newNoteForm.favorite,
-        new Date(), new Date(), Status.ACTIVE);
-      this.noteService.createNote(newNote).subscribe(data => {
-        this.categoryService.updateCategory(data.category).subscribe(data => {
-          this.updateInfo(localStorage.getItem("id") || '');
-          this.updateNotesInfo()
-        });
-      })
-    }
+    // @ts-ignore
+    let newNote = new CreateNoteRequest(newNoteForm.name, newNoteForm.desc, category, newNoteForm.favorite, this.publicId);
+    this.noteService.createNote(newNote).subscribe(() => {
+      this.categoryService.updateCategory(newNote.category).subscribe(() => {
+        // @ts-ignore
+        this.updateInfo();
+        this.updateNotesInfo();
+      });
+    })
   }
 
   private updateNotesInfo() {
@@ -129,17 +115,13 @@ export class AppComponent implements OnInit{
       this.notes = data;
     }, (error: HttpErrorResponse) => {
       if (error.status == 403 || error.status == 401) {
-        this.isLogged = false;
-        localStorage.removeItem("id")
-        localStorage.removeItem("token")
-        this.router.navigate(['login']);
+        this.logout();
       }
     });
   }
 
 
-  removeCategory(category: Category) {
-    this.categoryToDelete = category;
+  removeCategory() {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
     button.type = 'button';
@@ -154,35 +136,45 @@ export class AppComponent implements OnInit{
   onDeleteCategory(id: string | undefined) {
     if (id != null) {
       this.categoryService.deleteCategory(id).subscribe(data => {
-        this.updateInfo(localStorage.getItem("id") || '');
-      })
+        this.updateInfo();
+      }, (error: HttpErrorResponse) => {
+        if (error.status == 403 || error.status == 401) {
+          this.logout();
+        }
+      });
     }
   }
 
   onCreateCategory(value: any){
     // @ts-ignore
-    let newCategory = new Category('', value.nameCat, value.descCat, localStorage.getItem("id"),
-      Status.ACTIVE, null, 0);
-    this.categoryService.createCategory(newCategory).subscribe(data => {
-      this.updateInfo(localStorage.getItem("id") || '');
-    })
+    let newCategory = new CreateCategoryRequest(value.nameCat, value.descCat, this.publicId);
+    this.categoryService.createCategory(newCategory).subscribe(() => {
+      this.updateInfo();
+    }, (error: HttpErrorResponse) => {
+      if (error.status == 403 || error.status == 401) {
+        this.logout();
+      }
+    });
   }
 
   onUpdateCategory(value: any) {
     // @ts-ignore
-    let updateCategory = new Category(value.id, value.nameCat, value.descCat, localStorage.getItem("id"),
+    let updateCategory = new Category(value.id, value.nameCat, value.descCat, this.publicId,
       Status.ACTIVE, value.color, value.count);
-    this.categoryService.updateCategory(updateCategory).subscribe(data => {
-      this.updateInfo(localStorage.getItem("id") || '');
+    this.categoryService.updateCategory(updateCategory).subscribe(() => {
+      this.updateInfo();
       this.updateNotesInfo();
-    })
+    }, (error: HttpErrorResponse) => {
+      if (error.status == 403 || error.status == 401) {
+        this.logout();
+      }
+    });
   }
 
-  categoryToChangeColor: Category;
+
 
   changeColor(cats: Category) {
     this.selectedColor = cats.color != null ? cats.color : '#FFFFF';
-    this.categoryToChangeColor = cats;
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
     button.type = 'button';
@@ -192,21 +184,21 @@ export class AppComponent implements OnInit{
     container?.appendChild(button);
     button.click();
   }
-  selectedColor: string;
 
   saveColor() {
-    this.selectedCategoryToDelete.color = this.selectedColor;
+    this.selectedCategoryToEdit.color = this.selectedColor;
   }
 
-  selectedCategoryToDelete: Category | any;
+
 
   selectCategory(category: Category) {
-    this.selectedCategoryToDelete = category;
+    this.selectedCategoryToEdit = category;
   }
 
 
   clearCategoryToDelete() {
-    this.selectedCategoryToDelete = null;
+    // @ts-ignore
+    this.selectedCategoryToEdit = null;
   }
 
   logout() {

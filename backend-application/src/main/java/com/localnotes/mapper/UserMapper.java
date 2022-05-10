@@ -1,28 +1,28 @@
 package com.localnotes.mapper;
 
 import com.localnotes.dto.UserDto;
+import com.localnotes.dto.UserSecurityDto;
 import com.localnotes.entity.User;
 import com.localnotes.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class UserMapper {
 
     private final UserRepository userRepository;
 
-    public UserMapper(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public User toUserEntity(UserDto dto) {
-        User entity = userRepository.findByPublicId(dto.getId()).orElse(null);
+    public User toUserEntity(UserSecurityDto securityDto) {
+        User entity = userRepository.findByUsername(securityDto.getUsername()).orElse(null);
         if (entity == null) {
             entity = new User();
         }
-        entity.setEmail(dto.getEmail());
-        entity.setFirstName(dto.getFirstName());
-        entity.setLastName(dto.getLastName());
-        entity.setUsername(dto.getUsername());
+        entity.setEmail(securityDto.getEmail());
+        entity.setFirstName(securityDto.getFirstName());
+        entity.setLastName(securityDto.getLastName());
+        entity.setUsername(securityDto.getUsername());
+        entity.setPassword(securityDto.getPassword());
 
         return entity;
     }

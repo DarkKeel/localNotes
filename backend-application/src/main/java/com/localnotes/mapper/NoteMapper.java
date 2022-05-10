@@ -1,37 +1,27 @@
 package com.localnotes.mapper;
 
+import com.localnotes.dto.CategoryDto;
+import com.localnotes.dto.CreateNoteRequest;
 import com.localnotes.dto.NoteDto;
 import com.localnotes.entity.Note;
-import com.localnotes.repository.NoteRepository;
+import com.localnotes.entity.Status;
 import com.localnotes.service.IdService;
-import java.util.Date;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
 public class NoteMapper {
 
-    private final NoteRepository noteRepository;
-    private final CategoryMapper categoryMapper;
-
-    public NoteMapper(NoteRepository noteRepository, CategoryMapper categoryMapper) {
-        this.noteRepository = noteRepository;
-        this.categoryMapper = categoryMapper;
-    }
-
-    public Note toNoteEntity(NoteDto dto, String userId) {
-        Note entity = noteRepository.findByPublicId(dto.getId()).orElse(null);
-        if (entity == null) {
-            entity = new Note();
-            entity.setPublicId(IdService.createUuid());
-            entity.setCreated(new Date());
-            entity.setUserId(userId);
-        }
+    public Note toNoteEntity(CreateNoteRequest dto) {
+        Note entity = new Note();
+        entity.setPublicId(IdService.createUuid());
+        entity.setCreated(LocalDateTime.now());
+        entity.setUserId(dto.getUserId());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
-        entity.setCategory(categoryMapper.toCategoryEntity(dto.getCategory()));
-        entity.setStatus(dto.getStatus());
+        entity.setStatus(Status.ACTIVE);
         entity.setFavorite(dto.getFavorite());
-        entity.setUpdated(new Date());
+        entity.setUpdated(LocalDateTime.now());
 
         return entity;
     }
@@ -39,13 +29,22 @@ public class NoteMapper {
     public NoteDto toNoteDto(Note entity) {
         NoteDto dto = new NoteDto();
         dto.setId(entity.getPublicId());
+        dto.setUserId(entity.getUserId());
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
-        dto.setCategory(categoryMapper.toCategoryDto(entity.getCategory()));
         dto.setStatus(entity.getStatus());
         dto.setFavorite(entity.isFavorite());
         dto.setCreated(entity.getCreated());
         dto.setUpdated(entity.getUpdated());
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(entity.getCategory().getPublicId());
+        categoryDto.setName(entity.getCategory().getName());
+        categoryDto.setDescription(entity.getCategory().getDescription());
+        categoryDto.setUserId(entity.getUserId());
+        categoryDto.setStatus(entity.getCategory().getStatus());
+        categoryDto.setColor(entity.getCategory().getColor());
+        categoryDto.setCountOfNotes(entity.getCategory().getNoteList().size());
+        dto.setCategory(categoryDto);
 
         return dto;
     }

@@ -11,15 +11,12 @@ import {UserReg} from "../../model/UserReg";
   templateUrl: './loginpage.component.html',
   styleUrls: ['./loginpage.component.css']
 })
-export class LoginpageComponent implements OnInit {
+export class LoginpageComponent {
   errorMessage: any;
   isError = false;
 
   constructor(private router:Router, private auth:AuthenticateService,
               private app: AppComponent) { }
-
-  ngOnInit() {
-  }
 
   loginUser(event: any): void {
     event.preventDefault();
@@ -31,14 +28,13 @@ export class LoginpageComponent implements OnInit {
       localStorage.setItem("id", data.id);
       localStorage.setItem("token", data.token);
       this.app.setIsLogged(true);
-      this.app.updateInfo(data.id);
+      this.app.updateInfo();
       this.router.navigate(['']);
     }, (error: HttpErrorResponse) => {
-      this.errorMessage = error.status;
       if (error.status == 401 || error.status == 403) {
-        this.errorMessage = 'Incorrect login and/or password'
+        this.errorMessage = 'Неверный логин или пароль'
       } else {
-        this.errorMessage = 'Something went wrong.'
+        this.errorMessage = 'Что-то пошло не так'
       }
       this.isError = true;
     });
@@ -47,14 +43,14 @@ export class LoginpageComponent implements OnInit {
   registerNewUser(value: any) {
     let newUser: UserReg = new UserReg(value.regUsername, value.regFirstname,
       value.regLastname, value.regEmail, value.regPassword);
-    this.auth.createUser(newUser).subscribe(data => {
-      let username = data.username;
+    this.auth.createUser(newUser).subscribe(() => {
+      let username = newUser.username;
       let password = newUser.password;
       this.auth.getToken(new AuthRequest(username, password)).subscribe(data => {
         localStorage.setItem("id", data.id);
         localStorage.setItem("token", data.token);
         this.app.setIsLogged(true);
-        this.app.updateInfo(data.id);
+        this.app.updateInfo();
         this.router.navigate(['']);
       }, (error: HttpErrorResponse) => {
         this.errorMessage = error.status;

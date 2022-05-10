@@ -10,8 +10,9 @@ export class Note {
   created: Date;
   updated: Date;
   status: Status;
+  userId: string;
 
-  constructor(id: string, name: string, description: string, category: Category, favorite: boolean, created: Date, updated: Date, status: Status) {
+  constructor(id: string, name: string, description: string, category: Category, favorite: boolean, created: Date, updated: Date, status: Status, userId: string) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -20,5 +21,6 @@ export class Note {
     this.created = created;
     this.updated = updated;
     this.status = status;
+    this.userId = userId;
   }
 }

@@ -1,32 +1,34 @@
 package com.localnotes.controller;
 
-import com.localnotes.dto.AuthenticationRequestDto;
-import com.localnotes.dto.UserDto;
-import com.localnotes.entity.User;
+import com.localnotes.dto.AuthenticationRequest;
+import com.localnotes.dto.AuthenticationResponse;
+import com.localnotes.dto.UserSecurityDto;
 import com.localnotes.service.AuthService;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthenticationRestControllerV1 {
 
     private final AuthService authService;
 
-    public AuthenticationRestControllerV1(AuthService authService) {
-        this.authService = authService;
-    }
-
-    @PostMapping("login")
-    public Map<String, String> login(@RequestBody AuthenticationRequestDto requestDto) {
+    @PostMapping("/login")
+    public AuthenticationResponse login(@RequestBody AuthenticationRequest requestDto) {
         return authService.login(requestDto);
     }
 
     @PostMapping("/create")
-    public UserDto createUser(@RequestBody User user) {
-        return authService.createUser(user);
+    public ResponseEntity<Void> createUser(@RequestBody UserSecurityDto user) {
+        authService.createUser(user);
+        return ResponseEntity.created(URI.create("")).build();
     }
 }
