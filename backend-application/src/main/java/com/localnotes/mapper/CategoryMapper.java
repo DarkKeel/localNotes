@@ -1,36 +1,28 @@
 package com.localnotes.mapper;
 
 import com.localnotes.dto.CategoryDto;
+import com.localnotes.dto.CreateCategoryRequest;
 import com.localnotes.entity.Category;
-import com.localnotes.repository.CategoryRepository;
+import com.localnotes.entity.Status;
 import com.localnotes.service.IdService;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryMapper {
 
-    private final CategoryRepository categoryRepository;
-
-    public CategoryMapper(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
-    public Category toCategoryEntity(CategoryDto dto) {
-        Category entity = categoryRepository.findByPublicId(dto.getId())
-                .orElse(null);
-        if (entity == null) {
-            entity = new Category();
-            entity.setPublicId(IdService.createUuid());
-            entity.setCreated(new Date());
-        }
+    public Category toCategoryEntity(CreateCategoryRequest dto) {
+        Category entity = new Category();
+        entity.setPublicId(IdService.createUuid());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setUserId(dto.getUserId());
-        entity.setStatus(dto.getStatus());
-        entity.setUpdated(new Date());
-        entity.setCountOfnotes(dto.getCountOfnotes());
-        entity.setColor(dto.getColor());
+        entity.setCreated(LocalDateTime.now());
+        entity.setUpdated(LocalDateTime.now());
+        entity.setColor("#FFFFFF");
+        entity.setNoteList(Collections.emptyList());
+        entity.setStatus(Status.ACTIVE);
 
         return entity;
     }
@@ -43,7 +35,7 @@ public class CategoryMapper {
         dto.setDescription(entity.getDescription());
         dto.setStatus(entity.getStatus());
         dto.setColor(entity.getColor());
-        dto.setCountOfnotes(entity.getCountOfnotes());
+        dto.setCountOfNotes(entity.getNoteList().size());
 
         return dto;
     }

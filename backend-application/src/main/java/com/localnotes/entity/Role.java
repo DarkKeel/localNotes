@@ -1,14 +1,13 @@
 package com.localnotes.entity;
 
 import java.util.List;
+import java.util.StringJoiner;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,9 +28,9 @@ public class Role extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Role{"
-                + "id: "
-                + super.getId() + ", "
-                + "name: " + name + "}";
+        return new StringJoiner(", ", Role.class.getSimpleName() + "[", "]")
+                .add("id=" + super.getId())
+                .add("name='" + name + "'")
+                .toString();
     }
 }

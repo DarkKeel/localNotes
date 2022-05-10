@@ -1,76 +1,75 @@
 package com.localnotes.service;
 
+import com.localnotes.dto.CreateNoteRequest;
 import com.localnotes.dto.NoteDto;
 import com.localnotes.entity.Category;
 import com.localnotes.entity.Note;
+import com.localnotes.mapper.CategoryMapper;
 import com.localnotes.mapper.NoteMapper;
 import com.localnotes.repository.NoteRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class NoteService {
-
-    private static final String WRONG_DATA = "There is bad data in input.";
 
     private final NoteRepository noteRepository;
     private final NoteMapper noteMapper;
-
-    public NoteService(NoteRepository noteRepository, NoteMapper noteMapper) {
-        this.noteRepository = noteRepository;
-        this.noteMapper = noteMapper;
-    }
+    private final CategoryService categoryService;
 
     public List<NoteDto> getAllNotes(String userId) {
         List<Note> result = noteRepository.findAllByUserId(userId).orElse(new ArrayList<>());
-        return result.stream().map(noteMapper::toNoteDto).collect(Collectors.toList());
+        return result.stream()
+                .map(noteMapper::toNoteDto)
+                .sorted(Comparator.comparing(NoteDto::getUpdated).reversed())
+                .collect(Collectors.toList());
     }
 
     public List<NoteDto> getNotesByCategory(String userId, Category category) {
         List<Note> result = noteRepository.findAllByUserIdAndCategory(userId, category).orElse(new ArrayList<>());
-        return result.stream().map(noteMapper::toNoteDto).collect(Collectors.toList());
+        return result.stream()
+                .map(noteMapper::toNoteDto)
+                .sorted(Comparator.comparing(NoteDto::getCreated))
+                .sorted(Comparator.comparing(NoteDto::getFavorite).reversed())
+                .collect(Collectors.toList());
     }
 
-    public NoteDto createNote(NoteDto dto, String userId) {
-        log.info("NoteService: createNote: creating note name: '{}' for user id: {}", dto.getName(), userId);
-        if (dto.getId() == null || dto.getId().isEmpty()) {
-            return noteMapper.toNoteDto(noteRepository.save(noteMapper.toNoteEntity(dto, userId)));
-        }
-        throw new IllegalArgumentException("Note with id: " + dto.getId() + " already exists.");
+    public void createNote(CreateNoteRequest dto) {
+        log.info("NoteService: createNote: creating note name: '{}' for user id: {}", dto.getName(), dto.getUserId());
+        Category category = categoryService.getCategory(dto.getCategory().getId());
+        Note entity = noteMapper.toNoteEntity(dto);
+        entity.setCategory(category);
+        noteRepository.save(entity);
     }
 
-    public NoteDto updateNote(String userId, String noteId, NoteDto dto) {
-        if (!dto.getId().equals(noteId)) {
-            throw new IllegalArgumentException(WRONG_DATA);
-        }
-        log.info("NoteService: updateNote: updating note id: {} for user id: {}", dto.getId(), userId);
-        if (dto.getId() == null) {
-            throw new IllegalArgumentException(WRONG_DATA);
-        }
+    public void updateNote(NoteDto dto) {
+        log.info("NoteService: updateNote: updating note id: {} for user id: {}", dto.getId(), dto.getUserId());
+
         Note entity = noteRepository.findByPublicId(dto.getId()).orElseThrow(() ->
-                new EntityNotFoundException("Note id: " + dto.getId() + " note found."));
-        if (!entity.getUserId().equals(userId)) {
-            throw new IllegalArgumentException(WRONG_DATA);
-        }
-        return noteMapper.toNoteDto(noteRepository.save(noteMapper.toNoteEntity(dto, userId)));
+                new EntityNotFoundException("Note id: " + dto.getId() + " is not found."));
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        Category category = categoryService.getCategory(dto.getCategory().getId());
+        entity.setCategory(category);
+        entity.setFavorite(dto.getFavorite());
+        entity.setUpdated(LocalDateTime.now());
+        noteRepository.save(entity);
     }
 
-    @Transactional
     public void deleteNote(String noteId, String userId) {
         log.info("NoteService: deleteNote: deleting note id: {} for user id: {}", noteId, userId);
-        Note entity = noteRepository.findByPublicId(noteId).orElseThrow(() ->
-                new EntityNotFoundException("Note id: " + noteId + " note found."));
-        if (entity.getUserId().equals(userId)) {
-            noteRepository.deleteByPublicId(noteId);
-        } else {
-            throw new IllegalArgumentException(WRONG_DATA);
-        }
+        Note entity = noteRepository.findByPublicId(noteId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Note id: " + noteId + " is not found."));
+        noteRepository.delete(entity);
     }
 }

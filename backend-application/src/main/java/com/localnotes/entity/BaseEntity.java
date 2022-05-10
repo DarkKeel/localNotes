@@ -1,6 +1,6 @@
 package com.localnotes.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,11 +31,11 @@ public class BaseEntity {
 
     @CreatedDate
     @Column(name = "created")
-    private Date created;
+    private LocalDateTime created;
 
     @LastModifiedDate
     @Column(name = "updated")
-    private Date updated;
+    private LocalDateTime updated;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

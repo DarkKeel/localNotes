@@ -1,12 +1,13 @@
 package com.localnotes.controller;
 
+import com.localnotes.dto.CreateNoteRequest;
 import com.localnotes.dto.NoteDto;
 import com.localnotes.entity.Category;
 import com.localnotes.service.CategoryService;
 import com.localnotes.service.NoteService;
+import java.net.URI;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,16 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/note")
-@Slf4j
+@RequiredArgsConstructor
 public class NoteController {
 
     private final NoteService noteService;
     private final CategoryService categoryService;
-
-    public NoteController(NoteService noteService, CategoryService categoryService) {
-        this.noteService = noteService;
-        this.categoryService = categoryService;
-    }
 
     @GetMapping("/{userId}")
     public List<NoteDto> getAllNotes(@PathVariable String userId) {
@@ -42,23 +38,22 @@ public class NoteController {
         return noteService.getNotesByCategory(userId, category);
     }
 
-    @PostMapping("/{userId}")
-    public NoteDto createNote(@PathVariable String userId,
-                              @RequestBody NoteDto dto) {
-        return noteService.createNote(dto, userId);
+    @PostMapping()
+    public ResponseEntity<Void> createNote(@RequestBody CreateNoteRequest dto) {
+        noteService.createNote(dto);
+        return ResponseEntity.created(URI.create("")).build();
     }
 
-    @PutMapping("/{userId}/{noteId}")
-    public NoteDto updateNote(@PathVariable String userId,
-                              @PathVariable String noteId,
-                              @RequestBody NoteDto dto) {
-        return noteService.updateNote(userId, noteId, dto);
+    @PutMapping()
+    public ResponseEntity<Void> updateNote(@RequestBody NoteDto dto) {
+        noteService.updateNote(dto);
+        return ResponseEntity.accepted().build();
     }
 
     @DeleteMapping("/{userId}/{noteId}")
-    public ResponseEntity deleteNote(@PathVariable String userId,
+    public ResponseEntity<Void> deleteNote(@PathVariable String userId,
                                      @PathVariable String noteId) {
         noteService.deleteNote(noteId, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

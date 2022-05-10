@@ -30,7 +30,6 @@ create table categories
     description varchar(255),
     status      varchar(255),
     user_id     varchar(255),
-    counts      INT4,
     color       varchar(255),
     created     timestamp,
     updated     timestamp

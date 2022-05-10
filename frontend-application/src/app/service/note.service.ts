@@ -3,6 +3,7 @@ import {Category} from "../model/Category";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Note} from "../model/Note";
+import {CreateNoteRequest} from "../model/CreateNoteRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -12,29 +13,33 @@ export class NoteService {
   constructor(public http: HttpClient) { }
 
   getNotes() {
-    const headers = new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
+    const headers = this.getAuthHeaders();
     return this.http.get<Note[]>(environment.API_URL + "/api/v1/note/" + localStorage.getItem("id"), {headers});
   }
 
   getNotesByCategory(category: Category) {
-    const headers = new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
+    const headers = this.getAuthHeaders();
     return this.http.get<Note[]>(environment.API_URL + "/api/v1/note/" + localStorage.getItem("id") + "/" + category.name, {headers});
   }
 
   updateNote(editNote: Note) {
-    const headers = new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
-    return this.http.put<Note>(
-      environment.API_URL + "/api/v1/note/" + localStorage.getItem("id") + "/" + editNote.id, editNote,{headers});
+    const headers = this.getAuthHeaders();
+    return this.http.put<void>(
+      environment.API_URL + "/api/v1/note/", editNote,{headers});
   }
 
   deleteNote(id: string) {
-    const headers = new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
+    const headers = this.getAuthHeaders();
     return this.http.delete<void>(environment.API_URL + "/api/v1/note/" + localStorage.getItem("id") + "/" + id, {headers});
   }
 
-  createNote(newNote: Note) {
-    const headers = new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
-    return this.http.post<Note>(
-      environment.API_URL + "/api/v1/note/" + localStorage.getItem("id"), newNote,{headers});
+  createNote(newNote: CreateNoteRequest) {
+    const headers = this.getAuthHeaders();
+    return this.http.post<void>(
+      environment.API_URL + "/api/v1/note/", newNote,{headers});
+  }
+
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({Authorization: 'Bearer_' + localStorage.getItem("token")});
   }
 }
