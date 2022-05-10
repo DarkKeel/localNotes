@@ -76,7 +76,7 @@ public class CategoryService {
         }
     }
 
-    public Category getCategory(String publicId){
+    public Category getCategory(String publicId) {
         return categoryRepository.findByPublicId(publicId).orElseThrow();
     }
 
