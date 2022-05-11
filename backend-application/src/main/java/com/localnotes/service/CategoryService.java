@@ -30,13 +30,16 @@ public class CategoryService {
     }
 
     public List<CategoryDto> getCategories(String userId) {
-        List<Category> entityList = new ArrayList<>(categoryRepository.findAllByUserId(userId));
+        List<Category> entityList = categoryRepository.findAllByUserId(userId);
         if (entityList.isEmpty()) {
             return Collections.emptyList();
         }
 
         List<CategoryDto> result = new ArrayList<>();
-        entityList.forEach(category -> result.add(categoryMapper.toCategoryDto(category)));
+        entityList.forEach(category -> {
+            CategoryDto categoryDto = categoryMapper.toCategoryDto(category);
+            result.add(categoryDto);
+        });
         result.sort(Comparator.comparing(CategoryDto::getName));
 
         return result;
@@ -48,7 +51,7 @@ public class CategoryService {
             throw new IllegalArgumentException("Category with name: " + dto.getName() + " already exists");
         }
         Category entity = categoryMapper.toCategoryEntity(dto);
-        categoryMapper.toCategoryDto(categoryRepository.save(entity));
+        categoryRepository.save(entity);
     }
 
     public void updateCategory(CategoryDto dto) {
@@ -78,9 +81,5 @@ public class CategoryService {
 
     public Category getCategory(String publicId) {
         return categoryRepository.findByPublicId(publicId).orElseThrow();
-    }
-
-    public CategoryDto getCategoryDto(String id) {
-        return categoryMapper.toCategoryDto(getCategory(id));
     }
 }

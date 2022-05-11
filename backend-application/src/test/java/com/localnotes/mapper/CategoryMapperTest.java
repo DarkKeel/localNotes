@@ -5,6 +5,7 @@ import com.localnotes.dto.CreateCategoryRequest;
 import com.localnotes.entity.Category;
 import com.localnotes.entity.Status;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,8 +18,9 @@ class CategoryMapperTest {
     @Autowired
     private CategoryMapper categoryMapper;
 
+    @DisplayName("Создание Category из CreateCategoryRequest, проверка полей")
     @Test
-    void toCategoryEntity() {
+    void createCategoryRequestToCategoryEntityMapping() {
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest();
         createCategoryRequest.setName("TEST");
         createCategoryRequest.setDescription("TEST_DESCRIPTION");
@@ -32,8 +34,9 @@ class CategoryMapperTest {
         Assertions.assertEquals("#FFFFFF", entity.getColor());
     }
 
+    @DisplayName("Создание CategoryDto из Category, проверка полей")
     @Test
-    void toCategoryDto() {
+    void categoryToCategoryDtoMapping() {
         Category entity = new Category();
         entity.setPublicId("PUBLIC_ID");
         entity.setColor("#000000");
