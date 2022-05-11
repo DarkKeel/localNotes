@@ -1,5 +1,6 @@
 # Проект "LocalNotes"
-
+Статус последнего обновления:\
+<img src="https://github.com/darkkeel/localNotes/workflows/CI-CD-Pipeline/badge.svg">
 
 ## Описание
 
