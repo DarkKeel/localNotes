@@ -4,7 +4,6 @@ import com.localnotes.dto.CreateNoteRequest;
 import com.localnotes.dto.NoteDto;
 import com.localnotes.entity.Category;
 import com.localnotes.entity.Note;
-import com.localnotes.mapper.CategoryMapper;
 import com.localnotes.mapper.NoteMapper;
 import com.localnotes.repository.NoteRepository;
 import java.time.LocalDateTime;

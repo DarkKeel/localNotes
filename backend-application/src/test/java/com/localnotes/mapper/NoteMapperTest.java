@@ -6,6 +6,7 @@ import com.localnotes.entity.Category;
 import com.localnotes.entity.Note;
 import com.localnotes.entity.Status;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +21,9 @@ class NoteMapperTest {
     @Autowired
     private NoteMapper noteMapper;
 
+    @DisplayName("Создание Note из CreateNoteRequest, проверка полей")
     @Test
-    void toNoteEntity() {
+    void createNoteRequestToNoteEntityMapping() {
         CreateNoteRequest createNoteRequest = new CreateNoteRequest();
         createNoteRequest.setName("TEST");
         createNoteRequest.setDescription("TEST_DESC");
@@ -36,8 +38,9 @@ class NoteMapperTest {
         Assertions.assertEquals(createNoteRequest.getUserId(), entity.getUserId());
     }
 
+    @DisplayName("Создание NoteDto из Note, проверка полей")
     @Test
-    void toNoteDto() {
+    void noteToNoteDtoMapping() {
         Note entity = new Note();
         entity.setPublicId("PUBLIC_ID");
         entity.setName("TEST");

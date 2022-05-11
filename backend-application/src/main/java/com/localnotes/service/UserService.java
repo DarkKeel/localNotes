@@ -1,6 +1,5 @@
 package com.localnotes.service;
 
-import com.localnotes.dto.UserDto;
 import com.localnotes.dto.UserSecurityDto;
 import com.localnotes.entity.Role;
 import com.localnotes.entity.Status;
@@ -9,7 +8,7 @@ import com.localnotes.mapper.UserMapper;
 import com.localnotes.repository.RoleRepository;
 import com.localnotes.repository.UserRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +29,7 @@ public class UserService {
     public void register(UserSecurityDto userDto) {
         validate(userDto);
         Role roleUser = roleRepository.findByName("ROLE_USER");
-        List<Role> userRoles = new ArrayList<>();
-        userRoles.add(roleUser);
+        List<Role> userRoles = Collections.singletonList(roleUser);
 
         User userEntity = userMapper.toUserEntity(userDto);
         userEntity.setPublicId(IdService.createUuid());
