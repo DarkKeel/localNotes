@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Role extends BaseEntity {
 
-    @Column(name = "name")
+    @Column(name = "role_name")
     private String name;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)

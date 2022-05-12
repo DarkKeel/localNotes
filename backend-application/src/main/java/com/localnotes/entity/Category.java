@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Category extends BaseEntity {
 
-    @Column(name = "name")
+    @Column(name = "cat_name")
     private String name;
 
     @Column(name = "user_id")

@@ -23,7 +23,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(name = "public_id")
