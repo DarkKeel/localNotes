@@ -7,7 +7,7 @@ import com.localnotes.entity.Note;
 import com.localnotes.mapper.NoteMapper;
 import com.localnotes.repository.NoteRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,15 +26,17 @@ public class NoteService {
     private final CategoryService categoryService;
 
     public List<NoteDto> getAllNotes(String userId) {
-        List<Note> result = noteRepository.findAllByUserId(userId).orElse(new ArrayList<>());
+        List<Note> result = noteRepository.findAllByUserId(userId)
+                .orElse(Collections.emptyList());
         return result.stream()
                 .map(noteMapper::toNoteDto)
                 .sorted(Comparator.comparing(NoteDto::getUpdated).reversed())
                 .collect(Collectors.toList());
     }
 
-    public List<NoteDto> getNotesByCategory(String userId, Category category) {
-        List<Note> result = noteRepository.findAllByUserIdAndCategory(userId, category).orElse(new ArrayList<>());
+    public List<NoteDto> getNotesByCategory(String userId, String category) {
+        List<Note> result = noteRepository.findAllByUserIdAndCategoryName(userId, category)
+                .orElse(Collections.emptyList());
         return result.stream()
                 .map(noteMapper::toNoteDto)
                 .sorted(Comparator.comparing(NoteDto::getCreated))

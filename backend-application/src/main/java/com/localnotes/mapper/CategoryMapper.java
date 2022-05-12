@@ -7,6 +7,8 @@ import com.localnotes.entity.Status;
 import com.localnotes.service.IdService;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,5 +40,11 @@ public class CategoryMapper {
         dto.setCountOfNotes(entity.getNoteList().size());
 
         return dto;
+    }
+
+    public List<CategoryDto> toCategoryDtoList(List<Category> entityList) {
+        return entityList.stream()
+                .map(this::toCategoryDto)
+                .collect(Collectors.toList());
     }
 }

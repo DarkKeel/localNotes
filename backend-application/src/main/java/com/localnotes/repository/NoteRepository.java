@@ -1,10 +1,10 @@
 package com.localnotes.repository;
 
-import com.localnotes.entity.Category;
 import com.localnotes.entity.Note;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
@@ -12,6 +12,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 
     Optional<List<Note>> findAllByUserId(String userId);
 
-    Optional<List<Note>> findAllByUserIdAndCategory(String userId, Category category);
+    @Query("select n from Note n where n.userId = :userId and n.category.name = :category and n.category.userId = :userId")
+    Optional<List<Note>> findAllByUserIdAndCategoryName(String userId, String category);
 
 }
