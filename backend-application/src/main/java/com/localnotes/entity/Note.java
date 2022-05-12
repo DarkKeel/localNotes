@@ -19,7 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Note extends BaseEntity {
 
-    @Column(name = "name")
+    @Column(name = "note_name")
     private String name;
 
     @Column(name = "description")

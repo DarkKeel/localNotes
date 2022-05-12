@@ -33,6 +33,8 @@ export class LoginpageComponent {
     }, (error: HttpErrorResponse) => {
       if (error.status == 401 || error.status == 403) {
         this.errorMessage = 'Неверный логин или пароль'
+      } else if (error.status == 404) {
+        this.errorMessage = 'Пользователь не найден'
       } else {
         this.errorMessage = 'Что-то пошло не так'
       }

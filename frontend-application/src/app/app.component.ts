@@ -50,6 +50,7 @@ export class AppComponent implements OnInit{
 
   updateInfo() {
     this.categoryService.getCategories().subscribe(data => {
+      this.publicId = localStorage.getItem("id");
       this.categories = data;
       this.totalNotesCount = 0;
       data.forEach(x => this.totalNotesCount += x.countOfNotes);

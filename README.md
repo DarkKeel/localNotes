@@ -14,10 +14,13 @@
 
 Для запуска проекта необходимо JDK 11, Docker, Node.js, Angular-CLI.
 
-### Запуск backend модуля
+### Запуск backend модуля (с докером)
 1. Установить Docker с официального сайта.
 2. После запуска докера, необходимо открыть в командной строке каталог `dockers` и выполнить команду `docker compose up`.
 3. Запустить [LocalNotesApplication](backend-application/src/main/java/com/localnotes/LocalNotesApplication.java), указав локальный профиль в VM options `-Dspring.profiles.active=local`.
+
+### Запуск backend модуля (с БД h2)
+1. Запустить [LocalNotesApplication](backend-application/src/main/java/com/localnotes/LocalNotesApplication.java), указав профиль h2 в VM options `-Dspring.profiles.active=h2`.
 
 ### Запуск frontend модуля
 1. Установить Node.JS с официального сайта.
