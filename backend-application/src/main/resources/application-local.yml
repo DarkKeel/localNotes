@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/localDB
+    username: user
+    password: pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+  flyway:
+    enabled: true
+    schemas: public
+jwt:
+  token:
+    secret: localnotes
+    expired: 3600000
+    prefix: Bearer_
