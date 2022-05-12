@@ -21,7 +21,7 @@
 
 ### Запуск backend модуля (с БД h2)
 1. Запустить [LocalNotesApplication](backend-application/src/main/java/com/localnotes/LocalNotesApplication.java), указав профиль h2 в VM options `-Dspring.profiles.active=h2`.
-
+2. Доступ к базе данных можно выполнить, перейдя на `/h2-console`. Данные для управления базой данных указаны в [конфиге](backend-application/src/main/resources/application-h2.yml).
 ### Запуск frontend модуля
 1. Установить Node.JS с официального сайта.
 2. В командной строке выполнить `npm install`.
