@@ -7,7 +7,6 @@ import com.localnotes.entity.Status;
 import com.localnotes.entity.User;
 import com.localnotes.repository.UserRepository;
 import javax.persistence.EntityNotFoundException;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("h2")
 @SpringBootTest
 class AuthServiceTest {
 
