@@ -2,8 +2,6 @@ package com.localnotes.controller;
 
 import com.localnotes.dto.CreateNoteRequest;
 import com.localnotes.dto.NoteDto;
-import com.localnotes.entity.Category;
-import com.localnotes.service.CategoryService;
 import com.localnotes.service.NoteService;
 import java.net.URI;
 import java.util.List;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class NoteController {
 
     private final NoteService noteService;
-    private final CategoryService categoryService;
 
     @GetMapping("/{userId}")
     public List<NoteDto> getAllNotes(@PathVariable String userId) {
@@ -33,9 +30,8 @@ public class NoteController {
 
     @GetMapping("/{userId}/{categoryName}")
     public List<NoteDto> getAllNotesByCategory(@PathVariable String userId,
-                                        @PathVariable String categoryName) {
-        Category category = categoryService.getCategoryByName(categoryName, userId);
-        return noteService.getNotesByCategory(userId, category);
+                                               @PathVariable String categoryName) {
+        return noteService.getNotesByCategory(userId, categoryName);
     }
 
     @PostMapping()
@@ -52,7 +48,7 @@ public class NoteController {
 
     @DeleteMapping("/{userId}/{noteId}")
     public ResponseEntity<Void> deleteNote(@PathVariable String userId,
-                                     @PathVariable String noteId) {
+                                           @PathVariable String noteId) {
         noteService.deleteNote(noteId, userId);
         return ResponseEntity.ok().build();
     }

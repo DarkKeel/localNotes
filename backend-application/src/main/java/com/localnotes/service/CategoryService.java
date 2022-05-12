@@ -23,23 +23,12 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
-    public Category getCategoryByName(String categoryName, String userId) {
-        return categoryRepository.findByNameAndUserId(categoryName, userId)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Category with name: " + categoryName + " doesn't exists"));
-    }
-
     public List<CategoryDto> getCategories(String userId) {
         List<Category> entityList = categoryRepository.findAllByUserId(userId);
         if (entityList.isEmpty()) {
             return Collections.emptyList();
         }
-
-        List<CategoryDto> result = new ArrayList<>();
-        entityList.forEach(category -> {
-            CategoryDto categoryDto = categoryMapper.toCategoryDto(category);
-            result.add(categoryDto);
-        });
+        List<CategoryDto> result = categoryMapper.toCategoryDtoList(entityList);
         result.sort(Comparator.comparing(CategoryDto::getName));
 
         return result;
