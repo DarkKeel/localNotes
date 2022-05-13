@@ -27,26 +27,21 @@ export class NotesComponent implements OnInit {
               private app: AppComponent, private categoryService:CategoryService) { }
 
   ngOnInit(): void {
-    this.updateInfo();
   }
 
   showDescription(description: string): string {
-    let desc = description.length > 100 ? description.substring(0, 100) : description;
-    if (desc != description) {
-      let index = desc.lastIndexOf(" ");
-      desc = desc.substring(0, index).concat("...");
+    let lines = description.split('\n');
+    let desc;
+    if (lines.length > 4) {
+      desc = description.substring(0, description.indexOf(lines[3])).concat("...");
+    } else {
+      desc = description.length > 100 ? description.substring(0, 100) : description;
+      if (desc != description) {
+        let index = desc.lastIndexOf(" ");
+        desc = desc.substring(0, index).concat("...");
+      }
     }
     return desc;
-  }
-
-  private updateInfo() {
-    this.noteService.getNotes().subscribe(data => {
-      this.notes = data;
-    }, (error: HttpErrorResponse) => {
-      if (error.status == 403 || error.status == 401) {
-        this.app.logout();
-      }
-    });
   }
 
   updateSelectedNote(tmpNote: any) {
@@ -60,7 +55,6 @@ export class NotesComponent implements OnInit {
     this.noteService.updateNote(this.editNote).subscribe(() => {
       this.categoryService.updateCategory(this.editNote.category).subscribe( () => {
         this.app.updateInfo();
-        this.updateInfo();
       }, (error: HttpErrorResponse) => {
         if (error.status == 403 || error.status == 401) {
           this.app.logout();
@@ -102,7 +96,6 @@ export class NotesComponent implements OnInit {
         // @ts-ignore
         let cat = note.category;
         this.categoryService.updateCategory(cat).subscribe(() => {
-          this.updateInfo()
           this.app.updateInfo();
         }, (error: HttpErrorResponse) => {
           if (error.status == 403 || error.status == 401) {
