@@ -77,7 +77,7 @@ class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.token").isNotEmpty());
     }
 
-    @DisplayName("Авторизация, должен вернуть статус 404 и ошибку, что пользователь не найден")
+    @DisplayName("Авторизация, должен выбросить исключение")
     @Test
     void loginUserNotExists() throws Exception {
         UserSecurityDto user = createSecurityUser();
@@ -95,7 +95,7 @@ class AuthenticationControllerTest {
                         Matchers.containsString("User with username: TEST_USER2 not found")));
     }
 
-    @DisplayName("Создание пользователя, должен вернуть статус 201 и проверить, что в БД добавлена запись")
+    @DisplayName("Создание пользователя, должен вернуть статус 201")
     @Test
     void createUser() throws Exception{
         UserSecurityDto user = createSecurityUser();
@@ -111,8 +111,7 @@ class AuthenticationControllerTest {
         Assertions.assertEquals(2, userRepository.findAll().size());
     }
 
-    @DisplayName("Создание пользователя, должен вернуть статус 400 и сообщение, " +
-            "что пользователь с таким username уже существует")
+    @DisplayName("Создание пользователя, должен выюросить исключение")
     @Test
     void createUserDuplicateUsername() throws Exception{
         User user = createUserEntity();
@@ -126,8 +125,7 @@ class AuthenticationControllerTest {
                         Matchers.containsString("User with username: TEST_USER already exists")));
     }
 
-    @DisplayName("Создание пользователя, должен вернуть статус 400 и сообщение, " +
-            "что пользователь с таким email уже существует")
+    @DisplayName("Создание пользователя, должен выюросить исключение")
     @Test
     void createUserDuplicateEmail() throws Exception{
         UserSecurityDto user2 = createSecurityUser();

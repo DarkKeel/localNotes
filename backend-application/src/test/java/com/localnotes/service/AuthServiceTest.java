@@ -6,7 +6,9 @@ import com.localnotes.dto.UserSecurityDto;
 import com.localnotes.entity.Status;
 import com.localnotes.entity.User;
 import com.localnotes.repository.UserRepository;
+
 import javax.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

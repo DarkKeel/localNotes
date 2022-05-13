@@ -57,7 +57,7 @@ public class NoteService {
         log.info("NoteService: updateNote: updating note id: {} for user id: {}", dto.getId(), dto.getUserId());
 
         Note entity = noteRepository.findByPublicId(dto.getId()).orElseThrow(() ->
-                new EntityNotFoundException("Note id: " + dto.getId() + " is not found."));
+                new EntityNotFoundException("Note id: " + dto.getId() + " is not found"));
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         Category category = categoryService.getCategory(dto.getCategory().getId());
@@ -71,7 +71,11 @@ public class NoteService {
         log.info("NoteService: deleteNote: deleting note id: {} for user id: {}", noteId, userId);
         Note entity = noteRepository.findByPublicId(noteId)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Note id: " + noteId + " is not found."));
-        noteRepository.delete(entity);
+                        new EntityNotFoundException("Note id: " + noteId + " is not found"));
+        if (userId.equals(entity.getUserId())) {
+            noteRepository.delete(entity);
+        } else {
+            throw new IllegalArgumentException("User id: " + userId + " is not owner of note: " + noteId);
+        }
     }
 }
