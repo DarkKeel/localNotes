@@ -5,12 +5,13 @@ import com.localnotes.dto.AuthenticationResponse;
 import com.localnotes.dto.UserSecurityDto;
 import com.localnotes.entity.User;
 import com.localnotes.security.jwt.JwtTokenProvider;
-import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 @Slf4j

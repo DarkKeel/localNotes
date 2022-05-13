@@ -5,11 +5,12 @@ import com.localnotes.dto.CreateCategoryRequest;
 import com.localnotes.entity.Category;
 import com.localnotes.entity.Status;
 import com.localnotes.service.IdService;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryMapper {

@@ -5,15 +5,15 @@ import com.localnotes.dto.CreateCategoryRequest;
 import com.localnotes.entity.Category;
 import com.localnotes.mapper.CategoryMapper;
 import com.localnotes.repository.CategoryRepository;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @Slf4j
