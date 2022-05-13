@@ -2,14 +2,10 @@ package com.localnotes.config;
 
 import com.localnotes.security.jwt.JwtConfigurer;
 import com.localnotes.security.jwt.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Profile("h2")
@@ -18,19 +14,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
         value = "spring.h2.console.enabled",
         havingValue = "true"
 )
-@RequiredArgsConstructor
-public class H2SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class H2SecurityConfig extends SecurityConfig {
 
     private static final String H2_ENDPOINT = "/h2-console/**";
     private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/**";
 
-    private final JwtTokenProvider jwtTokenProvider;
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public H2SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        super(jwtTokenProvider);
     }
 
     @Override
