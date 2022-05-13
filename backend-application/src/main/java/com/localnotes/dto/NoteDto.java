@@ -1,8 +1,9 @@
 package com.localnotes.dto;
 
 import com.localnotes.entity.Status;
-import java.time.LocalDateTime;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 public class NoteDto {

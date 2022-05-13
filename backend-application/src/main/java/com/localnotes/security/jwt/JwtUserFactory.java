@@ -3,10 +3,11 @@ package com.localnotes.security.jwt;
 import com.localnotes.entity.Role;
 import com.localnotes.entity.Status;
 import com.localnotes.entity.User;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class JwtUserFactory {
 

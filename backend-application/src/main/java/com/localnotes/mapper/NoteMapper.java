@@ -6,8 +6,9 @@ import com.localnotes.dto.NoteDto;
 import com.localnotes.entity.Note;
 import com.localnotes.entity.Status;
 import com.localnotes.service.IdService;
-import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class NoteMapper {
