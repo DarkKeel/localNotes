@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/**";
 
-    private final JwtTokenProvider jwtTokenProvider;
+    protected final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     @Override
