@@ -55,6 +55,7 @@ export class AppComponent implements OnInit{
       this.totalNotesCount = 0;
       data.forEach(x => this.totalNotesCount += x.countOfNotes);
       this.allCategories.countOfNotes = this.totalNotesCount;
+      this.updateNotesInfo();
     }, (error: HttpErrorResponse) => {
       if (error.status == 403 || error.status == 401) {
         this.logout();
@@ -207,5 +208,20 @@ export class AppComponent implements OnInit{
     localStorage.removeItem("id")
     localStorage.removeItem("token")
     this.router.navigate(['login']);
+  }
+
+  searchNote(value: string) {
+    const results: Note[] = [];
+    for (const note of this.notes) {
+      if (note.name.toLowerCase().indexOf(value.toLowerCase()) !== -1
+        || note.description.toLowerCase().indexOf(value.toLowerCase()) !== -1) {
+        results.push(note);
+      }
+    }
+    this.notes = results;
+    if (!value) {
+      this.updateNotesInfo();
+    }
+
   }
 }
