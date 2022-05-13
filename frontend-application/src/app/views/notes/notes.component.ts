@@ -54,7 +54,8 @@ export class NotesComponent implements OnInit {
     this.editNote.updated = new Date();
     this.noteService.updateNote(this.editNote).subscribe(() => {
       this.categoryService.updateCategory(this.editNote.category).subscribe( () => {
-        this.app.updateInfo();
+        // @ts-ignore
+        this.app.showNotesByCategory(category1);
       }, (error: HttpErrorResponse) => {
         if (error.status == 403 || error.status == 401) {
           this.app.logout();
