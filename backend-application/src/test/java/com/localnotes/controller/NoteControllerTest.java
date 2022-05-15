@@ -74,7 +74,7 @@ class NoteControllerTest {
     private User testUser;
     private Category testCategory;
     private Note testNote;
-    @Value("${jwt.token.prefix}")
+    @Value("${jwt.tokenPrefix}")
     private String token;
 
     @BeforeEach

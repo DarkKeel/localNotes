@@ -29,6 +29,9 @@ public class NoteService {
     public List<NoteDto> getAllNotes(String userId) {
         List<Note> result = noteRepository.findAllByUserId(userId)
                 .orElse(Collections.emptyList());
+        if (result.isEmpty()) {
+            return Collections.emptyList();
+        }
         return result.stream()
                 .map(noteMapper::toNoteDto)
                 .sorted(Comparator.comparing(NoteDto::getUpdated).reversed())
@@ -38,6 +41,9 @@ public class NoteService {
     public List<NoteDto> getNotesByCategory(String userId, String category) {
         List<Note> result = noteRepository.findAllByUserIdAndCategoryName(userId, category)
                 .orElse(Collections.emptyList());
+        if (result.isEmpty()) {
+            return Collections.emptyList();
+        }
         return result.stream()
                 .map(noteMapper::toNoteDto)
                 .sorted(Comparator.comparing(NoteDto::getCreated))

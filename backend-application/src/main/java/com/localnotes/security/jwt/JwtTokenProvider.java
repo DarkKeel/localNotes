@@ -6,8 +6,11 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,17 +30,15 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@ConfigurationProperties(prefix = "jwt")
+@Getter
+@Setter
 public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
 
-    @Value("${jwt.token.secret}")
     private String secret;
-
-    @Value("${jwt.token.prefix}")
     private String tokenPrefix;
-
-    @Value("${jwt.token.expired}")
     private long validityInMills;
 
     @PostConstruct

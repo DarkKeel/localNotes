@@ -4,7 +4,7 @@ import com.localnotes.dto.CategoryDto;
 import com.localnotes.dto.CreateCategoryRequest;
 import com.localnotes.entity.Category;
 import com.localnotes.entity.Status;
-import com.localnotes.service.IdService;
+import com.localnotes.utils.IdGeneration;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ public class CategoryMapper {
 
     public Category toCategoryEntity(CreateCategoryRequest dto) {
         Category entity = new Category();
-        entity.setPublicId(IdService.createUuid());
+        entity.setPublicId(IdGeneration.createId());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setUserId(dto.getUserId());
