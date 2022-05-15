@@ -12,5 +12,5 @@ spring:
 jwt:
   token:
     secret: localnotes
-    expired: 3600000
-    prefix: Bearer_
+    validityInMills: 3600000
+    tokenPrefix: Bearer_

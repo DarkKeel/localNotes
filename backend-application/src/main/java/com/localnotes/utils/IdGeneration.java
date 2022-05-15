@@ -1,19 +1,19 @@
-package com.localnotes.service;
+package com.localnotes.utils;
 
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
 @Service
-public class IdService {
+public class IdGeneration {
 
     private static final Random random = new Random();
 
-    private IdService() {
+    private IdGeneration() {
 
     }
 
-    public static String createUuid() {
+    public static String createId() {
         int leftLimit = 48;
         int rightLimit = 122;
         int targetStringLength = 10;

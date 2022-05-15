@@ -63,7 +63,7 @@ class CategoryControllerTest {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private User testUser;
-    @Value("${jwt.token.prefix}")
+    @Value("${jwt.tokenPrefix}")
     private String token;
 
 

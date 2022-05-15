@@ -1,30 +1,20 @@
-package com.localnotes.config;
+package com.localnotes.config.security;
 
 import com.localnotes.security.jwt.JwtConfigurer;
 import com.localnotes.security.jwt.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
-@Profile("local")
+@Profile("h2")
 @Configuration
-@RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class H2SecurityConfig extends SecurityConfig {
 
-    private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
-    private static final String LOGIN_ENDPOINT = "/api/v1/auth/**";
+    private static final String H2_ENDPOINT = "/h2-console/**";
 
-    protected final JwtTokenProvider jwtTokenProvider;
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public H2SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        super(jwtTokenProvider);
     }
 
     @Override
@@ -35,10 +25,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers(H2_ENDPOINT).permitAll()
                 .antMatchers(ADMIN_ENDPOINT).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
         http.cors();
+        http.headers().frameOptions().sameOrigin();
     }
 }

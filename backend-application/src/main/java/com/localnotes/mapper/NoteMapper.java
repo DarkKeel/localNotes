@@ -5,7 +5,7 @@ import com.localnotes.dto.CreateNoteRequest;
 import com.localnotes.dto.NoteDto;
 import com.localnotes.entity.Note;
 import com.localnotes.entity.Status;
-import com.localnotes.service.IdService;
+import com.localnotes.utils.IdGeneration;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ public class NoteMapper {
 
     public Note toNoteEntity(CreateNoteRequest dto) {
         Note entity = new Note();
-        entity.setPublicId(IdService.createUuid());
+        entity.setPublicId(IdGeneration.createId());
         entity.setCreated(LocalDateTime.now());
         entity.setUserId(dto.getUserId());
         entity.setName(dto.getName());

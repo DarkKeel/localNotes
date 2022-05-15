@@ -7,6 +7,7 @@ import com.localnotes.entity.User;
 import com.localnotes.mapper.UserMapper;
 import com.localnotes.repository.RoleRepository;
 import com.localnotes.repository.UserRepository;
+import com.localnotes.utils.IdGeneration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,7 +34,7 @@ public class UserService {
         List<Role> userRoles = Collections.singletonList(roleUser);
 
         User userEntity = userMapper.toUserEntity(userDto);
-        userEntity.setPublicId(IdService.createUuid());
+        userEntity.setPublicId(IdGeneration.createId());
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRoles(userRoles);
         userEntity.setStatus(Status.ACTIVE);
