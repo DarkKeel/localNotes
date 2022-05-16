@@ -23,7 +23,8 @@
               <input type="submit" id="submitButton" name="submit" class="btn btn-info btn-md" value="вход">
             </div>
             <div class="form-group">
-              <p class="text-info text-center" data-toggle="modal" data-target="#registerModal">Регистрация</p>
+              <p class="text-info text-center" data-toggle="modal"
+                 data-target="#registerModal" (click)="editForm.form.reset()">Регистрация</p>
             </div>
           </form>
         </div>

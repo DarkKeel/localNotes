@@ -19,7 +19,8 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#addNoteModal">Добавить заметку</button>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-toggle="modal"
+            data-target="#addNoteModal" (click)="editForm.form.reset()">Добавить заметку</button>
     <ul class="navbar-nav mr-auto">
 
 
@@ -71,13 +72,16 @@
         <form #editForm="ngForm">
           <div class="form-group">
             <label for="name">Название заметки:</label>
-            <input type="text" ngModel="Без заголовка" name="name" class="form-control" id="name" required>
+            <input type="text" ngModel="" name="name" class="form-control" id="name" required>
           </div>
           <div class="form-group">
             <label for="description">Описание заметки:</label>
             <textarea rows="7" ngModel="" name="desc" class="form-control" id="description" required></textarea>
           </div>
-          <div class="form-group">
+          <div *ngIf="categories.length == 0" class="alert alert-warning">
+            Для создания заметки необходимо создать категорию!
+          </div>
+          <div *ngIf="categories.length > 0" class="form-group">
             <label for="category" style="margin-right: 10px;">Категория:</label>
             <select id="category" ngModel="" name="category" required>
               <option *ngFor="let v of categories" [value]="v.name">
@@ -92,7 +96,7 @@
           <div class="modal-footer">
             <button type="button" data-dismiss="modal" class="btn btn-secondary">Отмена</button>
             <button (click)="onCreateNote(editForm.value)" data-dismiss="modal" class="btn btn-primary"
-                    [disabled]="!editForm.valid">Создать</button>
+                    [disabled]="!editForm.valid || categories.length == 0">Создать</button>
           </div>
         </form>
       </div>
